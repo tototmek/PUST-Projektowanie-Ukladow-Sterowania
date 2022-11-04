@@ -1,7 +1,7 @@
-- [ ] Zadanie 1
-- [ ] Zadanie 2
-- [ ] Zadanie 3
-- [ ] Zadanie 4
-- [ ] Zadanie 5
+- [x] Zadanie 1
+- [x] Zadanie 2
+- [x] Zadanie 3
+- [x] Zadanie 4
+- [x] Zadanie 5
 - [ ] Zadanie 6
 - [ ] Eksperymenty i sprawko
