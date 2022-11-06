@@ -2,18 +2,16 @@ clear all;
 init;
 
 % Wybór regulatora (1-DMC, 2-PID)
-regulator = 2;
+regulator = 1;
 
 % Parametry DMC
 D = 195;
-N = 100;
-Nu = 4;
-lambda = 5;
+N = 17;
+Nu = 17;
+lambda = 0.01;
 
 % Nastawy PID i wyliczenie parametrów PID
-K = 0.9;
-Ti = 10;
-Td = 0.6;
+K=3.000000; Ti=15.000000; Td=0.000000;
 
 % K = 6.019547;
 % Ti = 5.903171;

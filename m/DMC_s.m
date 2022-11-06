@@ -11,9 +11,7 @@ function s = DMC_s(iterations, U_step)
         Y(k)=symulacja_obiektu5Y_p1(U(k-10),U(k-11),Y(k-1),Y(k-2));
     end
 
-    %Wyznaczenie zestawu liczb odpowiedzi skokowej dla DMC
-
     for k=13:iterations
-        s(k-12)=(Y(k)-Ypp)/0.5;
+        s(k-12)=(Y(k)-Ypp)/(U_step - Upp);
     end
 end
