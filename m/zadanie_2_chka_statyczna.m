@@ -2,8 +2,10 @@ iterations=300;
 Upp=1.5;
 Ypp=2.2;
 resolution = 60;
+
 u = linspace(1, 2, resolution);
 y =  zeros(size(u));
+
 for i = 1:resolution
     Ut = u(i);
     U(1:iterations)=Upp;
@@ -17,6 +19,7 @@ for i = 1:resolution
     end
     y(i) = Y(iterations);
 end
+
 figure;
 plot(u, y);
 xlabel('u');
