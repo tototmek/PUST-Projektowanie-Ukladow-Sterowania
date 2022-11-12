@@ -2,7 +2,7 @@ function E = aproximation_optimization(X)
     T1 = X(1);
     T2 = X(2);
     K=X(3);
-    Td=10;
+    Td=12;
     y(1:350) = 0;
     u(1:350) = 1;
     

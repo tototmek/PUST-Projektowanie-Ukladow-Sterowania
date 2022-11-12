@@ -1,4 +1,4 @@
-old_s = load("step_response").step_response;
+old_s = load("step_response_u50.mat").step_response;
 ypp = 34;
 upp = 25;
 uk = 40;
