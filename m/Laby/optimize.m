@@ -1,10 +1,10 @@
 %options = gaoptimset("StallGenLimit", 100, "PopulationSize", 300);
-[X] = fmincon(@aproximation_optimization, [0.3, 9, 1], [], []);
+[X] = fmincon(@aproximation_optimization, [0.1, 10, 0.5], [], []);
 X
 T1 = X(1);
 T2 = X(2);
 K=X(3);
-Td=12;
+Td=9;
 y(1:350) = 0;
 u(1:350) = 1;
 
@@ -21,3 +21,5 @@ for k = Td+3:350
 end
 hold on
 plot(y)
+
+% Dobry wyznaczony model: 3.5240 84.6883 0.5350

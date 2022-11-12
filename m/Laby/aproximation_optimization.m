@@ -2,7 +2,7 @@ function E = aproximation_optimization(X)
     T1 = X(1);
     T2 = X(2);
     K=X(3);
-    Td=12;
+    Td=9;
     y(1:350) = 0;
     u(1:350) = 1;
     
@@ -17,6 +17,6 @@ function E = aproximation_optimization(X)
     for k = Td+3:350
         y(k) = b1*u(k - Td - 1) + b2*u(k-Td-2)-a1*y(k-1)-a2*y(k-2);
     end
-    e = s' - y;
-    E=(norm(e))^2
+    short_s = s(1:350);
+    E = sum((short_s - y).^2)
 end
