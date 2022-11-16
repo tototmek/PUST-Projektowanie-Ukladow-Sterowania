@@ -1,6 +1,6 @@
 clear all;
 
-iterations=200;
+iterations=250;
 
 Upp=1.5;
 Ypp=2.2;
@@ -24,3 +24,12 @@ stairs(Y, 'LineWidth', 1.5);
 xlabel('k');
 ylabel('Y');
 hold on;
+
+%% Zapis do pliku
+% u_file = fopen('data/zad1/u_zad1.txt','w');
+% fprintf(u_file, '%f %f \n', [1:iterations; U]);
+% fclose(u_file);
+% 
+% y_file = fopen('data/zad1/y_zad1.txt','w');
+% fprintf(y_file, '%f %f \n', [1:iterations; Y]);
+% fclose(y_file);
