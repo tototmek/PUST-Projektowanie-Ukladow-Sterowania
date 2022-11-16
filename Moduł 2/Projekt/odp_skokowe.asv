@@ -1,144 +1,186 @@
 clear all;
 close all;
 
+%% Zadanie 1
+
 n=200;
-% Upp=0;
-% Ypp=0;
-% Zpp=0;
-U(1:n)=0;
-Z(1:n)=0;
-Y(1:7)=0;
-Y(8:n)=1;
-Ystat3D=zeros(101);
-    
-%Sprawdzenie poprawności Upp, Zpp, Ypp;
+
+Upp=0;
+Ypp=0;
+Zpp=0;
+
+u_s(1:n)=Upp;
+y_s(1:n)=Ypp;
+z_s(1:n)=Zpp;
+
+
+% Sprawdzenie poprawności podanego punku pracy
+
 for k=8:n
-    Y(k)=symulacja_obiektu5y_p2(U(k-6),U(k-7),Z(k-1),Z(k-2),Y(k-1),Y(k-2));
+    y_s(k)=symulacja_obiektu5y_p2(u_s(k-6),u_s(k-7),z_s(k-3),z_s(k-4),y_s(k-1),y_s(k-2));
 end
 
 subplot(3,1,1);
-stairs(U);
-ylabel('U');
+stairs(u_s, "LineWidth", 2);
+ylabel('u');
+title("Sprawdzenie poprawności podanego punku pracy")
+
 hold on;
 subplot(3,1,2);
-stairs(Z);
-ylabel('Z');
+stairs(z_s, "LineWidth", 2);
+ylabel('z');
+
 hold on;
 subplot(3,1,3);
-stairs(Y);
+stairs(y_s, "LineWidth", 2);
+ylabel('y');
 xlabel('k');
-ylabel('Y');
-
-% % %%Wyznaczenie różnych odpowiedzi skokowych
-% % %tor wejście-wyjście
-% % for i=1:5
-% %     dU=(i-3)*1;
-% %     U(10:n)=dU;
-% %     for k=8:n
-% %         Y(k)=symulacja_obiektu8y(U(k-6),U(k-7),Z(k-1),Z(k-2),Y(k-1),Y(k-2));
-% %     end
-% % 
-% %     set(subplot(3,1,1),'Color',[1.0 1.0 0.8])
-% %     set(subplot(3,1,2),'Color',[1.0 1.0 0.8])
-% %     set(subplot(3,1,3),'Color',[1.0 1.0 0.8])
-% %    
-% %     subplot(3,1,1);
-% %     stairs(U);
-% %     ylabel('U');
-% %     hold on;
-% %     subplot(3,1,2);
-% %     stairs(Z);
-% %     ylabel('Z');
-% %     hold on;
-% %     subplot(3,1,3);
-% %     stairs(Y);
-% %     xlabel('k');
-% %     ylabel('Y');
-% %     hold on;
-% % end
-% % legend({'U=-2','U=-1','U=0','U=1','U=2'})
-
-% % % %tor zakłócenie-wyjście
-% % % for i=1:5
-% % %     dZ=(i-3)*1;
-% % %     Z(10:n)=dZ;
-% % %     for k=8:n
-% % %        Y(k)=symulacja_obiektu8y(U(k-6),U(k-7),Z(k-1),Z(k-2),Y(k-1),Y(k-2));
-% % %     end
-% % % 
-% % %     subplot(3,1,1);
-% % %     stairs(U);
-% % %     ylabel('U');
-% % %     hold on;
-% % %     subplot(3,1,2);
-% % %     stairs(Z);
-% % %     ylabel('Z');
-% % %     hold on;
-% % %     subplot(3,1,3);
-% % %     stairs(Y);
-% % %     xlabel('k');
-% % %     ylabel('Y');
-% % %     hold on;
-% % % end
-% % % legend({'Z=-2','Z=-1','Z=0','Z=1','Z=2'})
 
 
-% % % % %Wyznaczanie charakterystki statycznej sterowania
-% % % % for i=1:101
-% % % %     dU=(i-1)*0.01;
-% % % %     U(10:n)=dU;
-% % % %     for k=8:n
-% % % %         Y(k)=symulacja_obiektu8y(U(k-6),U(k-7),Z(k-1),Z(k-2),Y(k-1),Y(k-2));
-% % % %     end
-% % % %     Ustat(i)=U(n);
-% % % %     Ystat(i)=Y(n);
-% % % % end
-% % % % 
-% % % % plot(Ustat,Ystat);
-% % % % xlabel('U');
-% % % % ylabel('Y');
-% % % % title('Charakterystyka statyczna Y(U)');
-% % % % 
-% % % % %Wzmocnienie statyczne
-% % % % KstatU=(Ystat(101)-Ystat(1))/(Ustat(101)-Ustat(1));
 
-% % % % % %Wyznaczanie charakterystki statycznej zakłócenia
-% % % % % for i=1:101
-% % % % %     dZ=(i-1)*0.01;
-% % % % %     Z(10:n)=dZ;
-% % % % %     for k=8:n
-% % % % %         Y(k)=symulacja_obiektu8y(U(k-6),U(k-7),Z(k-1),Z(k-2),Y(k-1),Y(k-2));
-% % % % %     end
-% % % % %     Zstat(i)=Z(n);
-% % % % %     Ystat(i)=Y(n);
-% % % % % end
-% % % % % 
-% % % % % plot(Zstat,Ystat);
-% % % % % xlabel('Z');
-% % % % % ylabel('Y');
-% % % % % title('Charakterystyka statyczna Y(Z)');
-% % % % % 
-% % % % % %Wzmocnienie statyczne
-% % % % % KstatZ=(Ystat(101)-Ystat(1))/(Zstat(101)-Zstat(1));
+%% Zadanie 2 - Wyznaczenie odpowiedzi skokowych różnych torów
 
-% % % % % % %Wyznaczanie charakterystki statycznej y(u,z)
-% % % % % % for i=1:101
-% % % % % %     dU=(i-1)*0.01;
-% % % % % %     U(10:n)=dU;
-% % % % % %     for j=1:101
-% % % % % %         dZ=(j-1)*0.01;
-% % % % % %         Z(10:n)=dZ;
-% % % % % %         for k=8:n
-% % % % % %             Y(k)=symulacja_obiektu8y(U(k-6),U(k-7),Z(k-1),Z(k-2),Y(k-1),Y(k-2));
-% % % % % %         end
-% % % % % %         Zstat(j)=Z(n);
-% % % % % %         Ystat3D(i,j)=Y(n);
-% % % % % %     end
-% % % % % %     Ustat(i)=U(n);
-% % % % % % end
-% % % % % %  
-% % % % % % surf(Ustat,Zstat,Ystat3D);
-% % % % % % xlabel('U');
-% % % % % % ylabel('Z');
-% % % % % % zlabel('Y');
-% % % % % % %title('Charakterystyka statyczna y(u,z)');
+tor = 2; % 1 - tor wejście-wyjście, 2 - zakłócenie-wyjście
+
+if tor == 1
+    for i=-2:2
+        u_tor=u_s;
+        u_tor(9:n)=i;
+    
+        for k=8:n
+            y_s(k)=symulacja_obiektu5y_p2(u_tor(k-6),u_tor(k-7),z_s(k-3),z_s(k-4),y_s(k-1),y_s(k-2));
+        end
+       
+        subplot(3,1,1);
+        stairs(u_tor, "LineWidth", 1.5);
+        ylabel('u');
+        ylim([-3, 3])
+        title("Odpowiedź skokowa dla toru wejście - wyjście")
+        hold on;
+        
+        subplot(3,1,2);
+        stairs(z_s, "LineWidth", 1.5);
+        ylabel('z');
+        hold on;
+    
+        subplot(3,1,3);
+        stairs(y_s, "LineWidth", 1.5);
+        ylabel('y');
+        xlabel('k');
+        hold on;
+    end
+    legend({'u = -2','u = -1','u = 0','u = 1','u = 2'})
+
+elseif tor == 2
+    for i=-2:2
+        z_tor=z_s;
+        z_tor(9:n)=i;
+    
+        for k=8:n
+            y_s(k)=symulacja_obiektu5y_p2(u_s(k-6),u_s(k-7),z_tor(k-3),z_tor(k-4),y_s(k-1),y_s(k-2));
+        end
+       
+        subplot(3,1,1);
+        stairs(u_s, "LineWidth", 1.5);
+        ylabel('u');
+        title("Odpowiedź skokowa dla toru zakłócenie - wyjście")
+        hold on;
+        
+        subplot(3,1,2);
+        stairs(z_tor, "LineWidth", 1.5);
+        ylim([-3, 3])
+        ylabel('z');
+        hold on;
+    
+        subplot(3,1,3);
+        stairs(y_s, "LineWidth", 1.5);
+        ylabel('y');
+        xlabel('k');
+        hold on;
+    end
+    legend({'z = -2','z = -1','z = 0','z = 1','z = 2'})
+end
+
+
+%% Zadanie 2 - Wyznaczanie charakterystyk statycznych
+
+n = 100;
+
+u_stat(1:n)=0;
+z_stat(1:n)=0;
+y_stat(1:n)=0;
+
+u_s(1:7)=0;
+z_s(1:7)=0;
+
+option = 1; % 1 - y(u), 2 - y(z), 3 - y(u, z)
+
+ifopti
+for i=1:n
+    u_s(8:n)=i*0.01;
+
+    for k=8:n
+        y_s(k)=symulacja_obiektu5y_p2(u_s(k-6),u_s(k-7),z_s(k-3),z_s(k-4),y_s(k-1),y_s(k-2));
+    end
+
+    u_stat(i)=u_s(n);
+    y_stat(i)=y_s(n);
+end
+
+K_stat_u = (y_stat(n) - y_stat(1))/(u_stat(n) - u_stat(1))
+
+plot(u_stat,y_stat);
+xlabel('u');
+ylabel('y');
+title('Charakterystyka statyczna y(u)');
+
+
+
+%Wyznaczanie charakterystki statycznej sterowania
+for i=1:n
+    z_s(8:n)=i*0.01;
+
+    for k=8:n
+        y_s(k)=symulacja_obiektu5y_p2(u_s(k-6),u_s(k-7),z_s(k-3),z_s(k-4),y_s(k-1),y_s(k-2));
+    end
+
+    z_stat(i)=z_s(n);
+    y_stat(i)=y_s(n);
+end
+
+K_stat_z = (y_stat(n) - y_stat(1))/(z_stat(n) - z_stat(1))
+
+plot(z_stat,y_stat);
+xlabel('u');
+ylabel('y');
+title('Charakterystyka statyczna y(z)');
+
+
+% Wyznaczanie charakterystki statycznej y(u,z)
+
+y_stat(n,n)=0;
+
+for i=1:n
+    u_s(8:n)=i*0.01;
+
+    for j=1:n
+        z_s(8:n)=j*0.01;
+        y_s(1:n)=0;
+
+        for k=8:n
+            y_s(k)=symulacja_obiektu5y_p2(u_s(k-6),u_s(k-7),z_s(k-3),z_s(k-4),y_s(k-1),y_s(k-2));
+        end
+
+        z_stat(j)=z_s(n);
+        y_stat(i,j)=y_s(n);
+    end
+
+    u_stat(i)=u_s(n);
+end
+
+surf(u_stat, z_stat, y_stat);
+xlabel('u');
+ylabel('z');
+zlabel('y');
+title('Charakterystyka statyczna y(u, z)');
+% title('Charakterystyka statyczna ${y(u, z)}$', 'Interpreter', 'Latex');
