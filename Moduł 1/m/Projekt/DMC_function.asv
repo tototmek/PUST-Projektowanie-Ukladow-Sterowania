@@ -1,14 +1,6 @@
 function [U, Y, E] = DMC_function(D, N, Nu, lambda)
     init;
     
-    U(1:11) = Upp;
-    Y(1:11) = Ypp;
-
-    u=U-Upp;
-    y=Y-Ypp;
-    
-    y_zad = Y_zad - Ypp;
-
     iterations = 300;
     U_step = 1.75;
     
@@ -31,6 +23,15 @@ function [U, Y, E] = DMC_function(D, N, Nu, lambda)
 
     K = (M'*M + lambda*eye(Nu, Nu))\M';
     dUP = zeros(D-1, 1);
+
+    % Inicjacja potrzebnych wektorów
+    U(1:11) = Upp;
+    Y(1:11) = Ypp;
+
+    u=U-Upp;
+    y=Y-Ypp;
+    
+    y_zad = Y_zad - Ypp;
 
     for k=12:T
         Y(k)=symulacja_obiektu5Y_p1(U(k-10),U(k-11),Y(k-1),Y(k-2));

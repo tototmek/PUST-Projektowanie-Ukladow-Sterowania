@@ -15,12 +15,13 @@ function [U, Y, E] = PID_function(K, Ti, Td)
     y_zad = Y_zad - Ypp;
 
     for k=12:T
+        % symulacja obiektu
         Y(k)=symulacja_obiektu5Y_p1(U(k-10),U(k-11),Y(k-1),Y(k-2));
-
         y(k) = Y(k) - Ypp;
-        e(k) = y_zad(k) - y(k);
 
+        e(k) = y_zad(k) - y(k);
         du = r0 * e(k) + r1 * e(k-1) + r2 * e(k-2);
+
 
         if du > dU_max
             du = dU_max;
@@ -39,7 +40,7 @@ function [U, Y, E] = PID_function(K, Ti, Td)
         if u(k) < U_min - Upp
             u(k) = U_min  - Upp;
         end
-
+        
         U(k) = u(k) + Upp;
     end
 
