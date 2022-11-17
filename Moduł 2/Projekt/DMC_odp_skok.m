@@ -13,7 +13,7 @@ u(1:n)=Upp;
 y(1:n)=Ypp;
 z(1:n)=Zpp;
 
-option=2; % 1 - tor wejście - wyjście (s), 2 - tor zakłócenie - wyjście (s_z)
+option=1; % 1 - tor wejście - wyjście (s), 2 - tor zakłócenie - wyjście (s_z)
 
 if option == 1
 
