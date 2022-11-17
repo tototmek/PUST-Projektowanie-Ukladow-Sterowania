@@ -1,7 +1,7 @@
 clear all;
 
 offset = 12;
-iterations=500 + offset;
+iterations=300 + offset;
 
 Upp=1.5;
 Ypp=2.2;
@@ -25,9 +25,13 @@ for k=13:iterations
     s(k-12)=(Y(k)-Ypp)/0.5;
 end
 
-stairs(s);
-xlabel('k');
-ylabel('s');
+stairs(s, 'LineWidth', 1.1);
+xlabel('$k$', 'Interpreter','latex');
+ylabel('$s$', 'Interpreter','latex');
+
+set(groot,'defaultAxesTickLabelInterpreter','latex');  
+set(gcf,'units','points','position',[100 100 450 300]);
+print('plots/zadanie_3/zad_3_odpowiedz_skokowa_dmc','-depsc','-r400');  % Zapisywanie wykresu
 
 
 %% Zapis do pliku

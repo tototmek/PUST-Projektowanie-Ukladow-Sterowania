@@ -14,18 +14,22 @@ for k=12:iterations
 end
 
 subplot(2,1,1);
-stairs(U, 'LineWidth', 1.5);
-xlabel('k');
-ylabel('U');
+stairs(U, 'LineWidth', 1.1, 'Color', '#0072BD');
+xlabel('$k$', 'Interpreter','latex');
+ylabel('$u$', 'Interpreter','latex');
 hold on;
 
 subplot(2,1,2);
-stairs(Y, 'LineWidth', 1.5);
-xlabel('k');
-ylabel('Y');
+stairs(Y, 'LineWidth', 1.1, 'Color', '#D95319');
+xlabel('$k$', 'Interpreter','latex');
+ylabel('$y$', 'Interpreter','latex');
 hold on;
 
-%% Zapis do pliku
+set(groot,'defaultAxesTickLabelInterpreter','latex');  
+set(gcf,'units','points','position',[100 100 450 300]);
+print('plots/zadanie_1/zad_1','-depsc','-r400');  % Zapisywanie wykresu
+
+%% Zapis danych do pliku
 % u_file = fopen('data/zad1/u_zad1.txt','w');
 % fprintf(u_file, '%f %f \n', [1:iterations; U]);
 % fclose(u_file);

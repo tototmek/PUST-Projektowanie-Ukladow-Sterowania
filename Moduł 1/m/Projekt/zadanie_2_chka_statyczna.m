@@ -21,15 +21,19 @@ for i=1:resolution
 end
 
 figure;
-plot(u, y);
-xlabel('u');
-ylabel('y');
-title('Charakterystyka statyczna')
+plot(u, y, 'LineWidth', 1.1);
+xlabel('$u$', 'Interpreter','latex');
+ylabel('$y$', 'Interpreter','latex');
+
+set(groot,'defaultAxesTickLabelInterpreter','latex');  
+set(gcf,'units','points','position',[100 100 450 300]);
+print('plots/zadanie_2/zad_2_charakterystyka_statyczna','-depsc','-r400');  % Zapisywanie wykresu
+
 
 %% Zapis do pliku
 
-char_stat_file_path = 'data/zad2/u_charakterystyka_statyczna_zad2.txt';
-
-char_stat_file = fopen(char_stat_file_path,'w');
-fprintf(char_stat_file, '%f %f \n', [u; y]);
-fclose(char_stat_file);
+% char_stat_file_path = 'data/zad2/u_charakterystyka_statyczna_zad2.txt';
+% 
+% char_stat_file = fopen(char_stat_file_path,'w');
+% fprintf(char_stat_file, '%f %f \n', [u; y]);
+% fclose(char_stat_file);

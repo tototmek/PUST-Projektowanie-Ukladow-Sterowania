@@ -1,4 +1,5 @@
 clear all;
+
 iterations=250;
 
 Upp=1.5;
@@ -17,19 +18,21 @@ for i=-2:2
     end
 
     subplot(2,1,1);
-    stairs(U);
-    xlabel('k');
-    ylabel('U');
+    stairs(U, 'LineWidth', 1.1);
+    xlabel('$k$', 'Interpreter','latex');
+    ylabel('$u$', 'Interpreter','latex');
+    ylim([0.8, 2.2])
     hold on;
 
     subplot(2,1,2);
-    stairs(Y);
-    xlabel('k');
-    ylabel('Y');
+    stairs(Y, 'LineWidth', 1.1);
+    xlabel('$k$', 'Interpreter','latex');
+    ylabel('$y$', 'Interpreter','latex');
+    ylim([1.7, 2.7])
     hold on;
 
 
-    % Zapis do pliku
+    % Zapis danych do pliku
     
 %     u_file_path = 'data/zad2/u_' + string(Upp+i*0.25) + '_odp_skok_zad2.txt';
 %     y_file_path = 'data/zad2/y_' + string(Upp+i*0.25) + '_odp_skok_zad2.txt';
@@ -44,4 +47,14 @@ for i=-2:2
 
 end
 
-legend({'u = 1','u = 1,25','u = 1,5','u = 1,75','u = 2'})
+set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+
+subplot(2,1,1);
+legend({'u = 1','u = 1,25','u = 1,5','u = 1,75','u = 2'}, 'Interpreter','latex')
+
+subplot(2,1,2);
+legend({'u = 1','u = 1,25','u = 1,5','u = 1,75','u = 2'}, 'Interpreter','latex')
+
+set(groot,'defaultAxesTickLabelInterpreter','latex');  
+set(gcf,'units','points','position',[100 100 450 300]);
+print('plots/zadanie_2/zad_2_odpowiedzi_skokowe','-depsc','-r400');  % Zapisywanie wykresu
