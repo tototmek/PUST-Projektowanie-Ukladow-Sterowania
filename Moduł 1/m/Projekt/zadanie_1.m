@@ -19,11 +19,19 @@ xlabel('$k$', 'Interpreter','latex');
 ylabel('$u$', 'Interpreter','latex');
 hold on;
 
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+
 subplot(2,1,2);
 stairs(Y, 'LineWidth', 1.1, 'Color', '#D95319');
 xlabel('$k$', 'Interpreter','latex');
 ylabel('$y$', 'Interpreter','latex');
 hold on;
+
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
 
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(gcf,'units','points','position',[100 100 450 300]);
