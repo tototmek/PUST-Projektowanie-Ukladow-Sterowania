@@ -29,6 +29,10 @@ stairs(s, 'LineWidth', 1.1);
 xlabel('$k$', 'Interpreter','latex');
 ylabel('$s$', 'Interpreter','latex');
 
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(gcf,'units','points','position',[100 100 450 300]);
 print('plots/zadanie_3/zad_3_odpowiedz_skokowa_dmc','-depsc','-r400');  % Zapisywanie wykresu

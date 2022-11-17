@@ -20,10 +20,18 @@ for i=1:resolution
     y(i) = Y(iterations);
 end
 
+K_stat = (y(resolution) - y(1))/(u(resolution) - u(1))
+
 figure;
 plot(u, y, 'LineWidth', 1.1);
 xlabel('$u$', 'Interpreter','latex');
 ylabel('$y$', 'Interpreter','latex');
+
+xl = get(gca,'XTickLabel');
+set(gca, 'XTickLabel', strrep(xl(:),'.',','))
+
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(gcf,'units','points','position',[100 100 450 300]);

@@ -22,6 +22,7 @@ for i=-2:2
     xlabel('$k$', 'Interpreter','latex');
     ylabel('$u$', 'Interpreter','latex');
     ylim([0.8, 2.2])
+    yticks([1 1.25 1.5 1.75 2])
     hold on;
 
     subplot(2,1,2);
@@ -52,8 +53,16 @@ set(groot,'defaultAxesTickLabelInterpreter','latex');
 subplot(2,1,1);
 legend({'u = 1','u = 1,25','u = 1,5','u = 1,75','u = 2'}, 'Interpreter','latex')
 
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+
 subplot(2,1,2);
 legend({'u = 1','u = 1,25','u = 1,5','u = 1,75','u = 2'}, 'Interpreter','latex')
+
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
 
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(gcf,'units','points','position',[100 100 450 300]);
