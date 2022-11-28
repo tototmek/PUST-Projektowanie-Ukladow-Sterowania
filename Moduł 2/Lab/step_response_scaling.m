@@ -1,12 +1,7 @@
 function [s, sz] = step_response_scaling()
-
-    %%TODO: Zamista wykorzystywaæ w DMC faktyczne przebiegi, generowaæ s i
-    %%sz na bazie aproksymacji obiektu.!@!!!
-
-
-    data = load("step_response_z60.mat");
+    data = load("z_step_response_for_model.mat");
     old_sz = data.step_response;
-    ypp = 33.43;
+    ypp = 33.67;
     zpp = 0;
     zk = 60;
     dz = zk - zpp;

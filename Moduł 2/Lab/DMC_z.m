@@ -18,7 +18,13 @@ function DMC_z()
     Zpp=0;
     
     % Wyznaczenie modelu odpowiedzi skokowej s
-    [s sz] = step_resonse_scaling();
+    % [s sz] = step_resonse_scaling(); % Stare, wykorzystuje bezpośrednie
+    % pomiary, prawdopodobnie lepsza jest aproksymacja:
+    data = load("step_responses_DMC.mat");
+    s = data.s;
+    sz = data.sz;
+
+
 
     D=500;
     Dz=500;
