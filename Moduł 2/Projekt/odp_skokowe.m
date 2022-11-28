@@ -21,22 +21,39 @@ for k=8:n
 end
 
 subplot(3,1,1);
-stairs(u, "LineWidth", 2);
-ylabel('u');
-title("Sprawdzenie poprawności podanego punku pracy")
-
+stairs(u, "r");
+ylabel('$u$', 'Interpreter','latex');
+ylim([-1, 1])
 hold on;
+
+% yl = get(gca,'YTickLabel');
+% set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+
 subplot(3,1,2);
-stairs(z, "LineWidth", 2);
-ylabel('z');
-
+stairs(z, "g");
+ylabel('$z$', 'Interpreter','latex');
+ylim([-1, 1])
 hold on;
+
+% yl = get(gca,'YTickLabel');
+% set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+
 subplot(3,1,3);
-stairs(y, "LineWidth", 2);
-ylabel('y');
-xlabel('k');
+stairs(y, "b");
+ylabel('$y$', 'Interpreter','latex');
+xlabel('$k$', 'Interpreter','latex');
+ylim([-1, 1])
+hold on;
+
+% yl = get(gca,'YTickLabel');
+% set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 
+set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+set(gcf,'units','points','position',[100 100 450 450]);
+% print('plots/zadanie_1/zad_1_punkt_pracy','-depsc','-r400');  % Zapisywanie wykresu
 
 %% Zadanie 2 - Wyznaczenie odpowiedzi skokowych różnych torów
 
@@ -58,24 +75,42 @@ if tor == 1
         end
        
         subplot(3,1,1);
-        stairs(u_tor, "LineWidth", 1.5);
-        ylabel('u');
+        stairs(u_tor);
+        ylabel('$u$', 'Interpreter','latex');
+        xlabel('$k$', 'Interpreter','latex');
         ylim([-3, 3])
-        title("Odpowiedź skokowa dla toru wejście - wyjście")
+%         yl = get(gca,'YTickLabel');
+%         set(gca, 'YTickLabel', strrep(yl(:),'.',','))
         hold on;
         
         subplot(3,1,2);
-        stairs(z, "LineWidth", 1.5);
-        ylabel('z');
+        stairs(z);
+        ylabel('$z$', 'Interpreter','latex');
+        xlabel('$k$', 'Interpreter','latex');
+        ylim([-3, 3])
+%         yl = get(gca,'YTickLabel');
+%         set(gca, 'YTickLabel', strrep(yl(:),'.',','))
         hold on;
     
         subplot(3,1,3);
-        stairs(y, "LineWidth", 1.5);
-        ylabel('y');
-        xlabel('k');
+        stairs(y);
+        ylabel('$y$', 'Interpreter','latex');
+        xlabel('$k$', 'Interpreter','latex');
+        ylim([-4.5, 4.5])
+%         yl = get(gca,'YTickLabel');
+%         set(gca, 'YTickLabel', strrep(yl(:),'.',','))
         hold on;
+    
     end
-    legend({'u = -2','u = -1','u = 0','u = 1','u = 2'})
+    subplot(3,1,1);
+    legend({'$u = -2$','$u = -1$','$u = 0$','$u = 1$','$u = 2$'}, 'Interpreter','latex')
+
+    subplot(3,1,3);
+    legend({'$u = -2$','$u = -1$','$u = 0$','$u = 1$','$u = 2$'}, 'Interpreter','latex')
+
+    set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+    set(gcf,'units','points','position',[100 100 450 450]);
+%     print('plots/zadanie_2/zad_2_wej_wyj','-depsc','-r400');  % Zapisywanie wykresu
 
 elseif tor == 2
     for i=-2:2
@@ -87,24 +122,44 @@ elseif tor == 2
         end
        
         subplot(3,1,1);
-        stairs(u, "LineWidth", 1.5);
-        ylabel('u');
-        title("Odpowiedź skokowa dla toru zakłócenie - wyjście")
+        stairs(u);
+        ylabel('$u$', 'Interpreter','latex');
+        xlabel('$k$', 'Interpreter','latex');
+        ylim([-3, 3])
+%         yl = get(gca,'YTickLabel');
+%         set(gca, 'YTickLabel', strrep(yl(:),'.',','))
         hold on;
         
         subplot(3,1,2);
-        stairs(z_tor, "LineWidth", 1.5);
+        stairs(z_tor);
         ylim([-3, 3])
-        ylabel('z');
+        ylabel('$z$', 'Interpreter','latex');
+        xlabel('$k$', 'Interpreter','latex');
+%         yl = get(gca,'YTickLabel');
+%         set(gca, 'YTickLabel', strrep(yl(:),'.',','))
         hold on;
     
         subplot(3,1,3);
-        stairs(y, "LineWidth", 1.5);
-        ylabel('y');
-        xlabel('k');
+        stairs(y);
+        ylabel('$y$', 'Interpreter','latex');
+        xlabel('$k$', 'Interpreter','latex');
+        ylim([-2, 2])
+%         yl = get(gca,'YTickLabel');
+%         set(gca, 'YTickLabel', strrep(yl(:),'.',','))
         hold on;
+
     end
-    legend({'z = -2','z = -1','z = 0','z = 1','z = 2'})
+
+    subplot(3,1,2);
+    legend({'$z = -2$','$z = -1$','$z = 0$','$z = 1$','$z = 2$'}, 'Interpreter','latex')
+
+    subplot(3,1,3);
+    legend({'$z = -2$','$z = -1$','$z = 0$','$z = 1$','$z = 2$'}, 'Interpreter','latex')
+
+    set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+    set(gcf,'units','points','position',[100 100 450 450]);
+%     print('plots/zadanie_2/zad_2_zak_wyj','-depsc','-r400');  % Zapisywanie wykresu
+
 end
 
 
@@ -139,9 +194,12 @@ if option == 1
     K_stat_u = (y_stat(n) - y_stat(1))/(u_stat(n) - u_stat(1))
     
     plot(u_stat,y_stat);
-    xlabel('u');
-    ylabel('y');
-    title('Charakterystyka statyczna y(u)');
+    xlabel('$u$', 'Interpreter','latex');
+    ylabel('$y$', 'Interpreter','latex');
+
+    set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+    set(gcf,'units','points','position',[100 100 450 300]);
+%     print('plots/zadanie_2/zad_2_chka_yu','-depsc','-r400');  % Zapisywanie wykresu
 
 elseif option == 2 
 
@@ -159,9 +217,12 @@ elseif option == 2
     K_stat_z = (y_stat(n) - y_stat(1))/(z_stat(n) - z_stat(1))
     
     plot(z_stat,y_stat);
-    xlabel('u');
-    ylabel('y');
-    title('Charakterystyka statyczna y(z)');
+    xlabel('$z$', 'Interpreter','latex');
+    ylabel('$y$', 'Interpreter','latex');
+
+    set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+    set(gcf,'units','points','position',[100 100 450 300]);
+%     print('plots/zadanie_2/zad_2_chka_yz','-depsc','-r400');  % Zapisywanie wykresu
 
 elseif option == 3     
 
@@ -186,9 +247,12 @@ elseif option == 3
     end
     
     surf(u_stat, z_stat, y_stat);
-    xlabel('u');
-    ylabel('z');
-    zlabel('y');
-    title('Charakterystyka statyczna y(u, z)');
-    % title('Charakterystyka statyczna ${y(u, z)}$', 'Interpreter', 'Latex');
+    xlabel('$u$', 'Interpreter','latex');
+    ylabel('$z$', 'Interpreter','latex');
+    zlabel('$y$', 'Interpreter','latex');
+
+    set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+    set(gcf,'units','points','position',[100 100 450 300]);
+%     print('plots/zadanie_2/zad_2_chka_yuz','-depsc','-r400');  % Zapisywanie wykresu
+
 end
