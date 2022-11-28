@@ -1,6 +1,7 @@
 close all;
 
-n=200;
+offset = 8;
+n=200 + offset;
 
 Upp=0;
 Ypp=0;
@@ -28,9 +29,15 @@ if option == 1
     end
 
     stairs(s);
-    xlabel('k');
-    ylabel('s');
-    title("Odpowiedź skokowa toru wejście - wyjście (s)")
+    xlabel('$k$', 'Interpreter','latex');
+    ylabel('$s$', 'Interpreter','latex');
+
+    yl = get(gca,'YTickLabel');
+    set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+    set(groot,'defaultAxesTickLabelInterpreter','latex');  
+    set(gcf,'units','points','position',[100 100 450 300]);
+    print('plots/zadanie_3/zad_3_odp_wej_wyj','-depsc','-r400');  % Zapisywanie wykresu
 
 elseif option == 2
 
@@ -45,8 +52,14 @@ elseif option == 2
     end
 
     stairs(s_z);
-    xlabel('k');
-    ylabel('s^{z}');
-    title("Odpowiedź skokowa toru zakłócenie - wyjście (s^{z})")
+    xlabel('$k$', 'Interpreter','latex');
+    ylabel('$s^{z}$', 'Interpreter','latex');
+
+    yl = get(gca,'YTickLabel');
+    set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+    set(groot,'defaultAxesTickLabelInterpreter','latex');  
+    set(gcf,'units','points','position',[100 100 450 300]);
+    print('plots/zadanie_3/zad_3_odp_zak_wyj','-depsc','-r400');  % Zapisywanie wykresu
 
 end
