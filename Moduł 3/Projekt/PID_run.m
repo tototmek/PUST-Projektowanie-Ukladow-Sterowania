@@ -1,9 +1,8 @@
 close all;
 
-D=100;
-N=50;
-Nu=20;
-lambda=50;
+K=0.27;
+Ti=5;
+Td=0.1;
 
 n=1000;
 
@@ -14,13 +13,8 @@ Y_zad(600:799) = 0.5;
 Y_zad(800:n) = 1.5;
 % Y_zad(50:n) = 1;
 
-option = 1; % 1 - normalny, 2 - rozmyty
 
-if option == 1
-    [U, Y, E] = DMC_normal(D, N, Nu, lambda);
-elseif option == 2
-    % TODO
-end
+[U, Y, E] = PID_normal(K, Ti, Td);
 
 disp(E);
 

@@ -4,16 +4,16 @@ function [U, Y, E] = DMC_normal(D, N, Nu, lambda)
 
     Ypp = 0;
     Upp = 0;
-    y_zad = 1;
     
     U_min = -1;
     U_max = 1;
     
-    Y_zad(1:49) = Ypp;
+    Y_zad(1:49) = 0;
     Y_zad(50:249) = 1;
     Y_zad(250:599) = 2.5;
     Y_zad(600:799) = 0.5;
     Y_zad(800:n) = 1.5;
+%     Y_zad(50:n) = 1;
     
     U(1:6) = Upp;
     Y(1:6) = Ypp;
