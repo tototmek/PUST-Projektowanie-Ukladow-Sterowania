@@ -1,12 +1,29 @@
-%% Zadanie 4(DMC w najrostszej formie)
-
 function [U, Y, E] = DMC_with_error_prediction(D, Dz, N, Nu, lambda)
-%     iterations = 500;
-    n = 500;
+    n = 300;
     
     Upp=0;
     Ypp=0;
     Zpp=0;
+
+    % Inicjacja potrzebnych wektorów
+
+    U(1:8) = Upp;
+    Y(1:8) = Ypp;
+    Y_zad(1:8) = Ypp;
+    Y_zad(9:n) = 1;
+    
+    Z = zeros(n); 
+    
+%     T_z = 100;
+%     Z(1:T_z) = 0;
+% 
+%     Z(T_z+1:n) = 0;
+%     Z(T_z+1:n) = 1;
+%     Z(T_z+1:n)=5*sin(linspace(0,1,n-T_z));
+%     
+%     noise = wgn(1,n,-10);
+%     Z = Z + noise;
+
     
     s = DMC_s_function(n);
     s_z = DMC_s_z_function(n);
@@ -37,23 +54,6 @@ function [U, Y, E] = DMC_with_error_prediction(D, Dz, N, Nu, lambda)
     dUP = zeros(D-1, 1);
     dZ = zeros(Dz, 1);
     
-    % Inicjacja potrzebnych wektorów
-    U(1:8) = Upp;
-    Y(1:8) = Ypp;
-    Y_zad(1:8) = Ypp;
-    Y_zad(9:n) = 1;
-    
-    Z = zeros(n); % - Z można zmieniać
-    T_z = 100;
-    
-    Z(1:T_z) = 0;
-    
-%     Z(T_z+1:n) = 1;
-    Z(T_z+1:n)=5*sin(linspace(0,1,n-T_z));
-    
-    noise = wgn(1,n,-10);
-    Z = Z + noise;
-    
     for k=9:n
         % symulacja obiektu
         Y(k)=symulacja_obiektu5y_p2(U(k-6),U(k-7),Z(k-3),Z(k-4),Y(k-1),Y(k-2));
@@ -79,6 +79,7 @@ function [U, Y, E] = DMC_with_error_prediction(D, Dz, N, Nu, lambda)
         for i=Dz:-1:2
            dZ(i)=dZ(i-1);
         end
+        
         dZ(1) = dz;
     end
 
