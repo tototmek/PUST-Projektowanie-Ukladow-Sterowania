@@ -8,11 +8,14 @@ hold on
 stairs(data2.step_response);
 stairs(data3.step_response);
 axis([0 600 32 49]);
-xlabel('k');
-ylabel('y');
+xlabel('\(k\)', Interpreter='latex');
+ylabel('\(y\)', Interpreter='latex');
+legend('\(z=30\)', '\(z=45\)', '\(z=60\)', Interpreter="latex");
 
 % Ch-ka statyczna
 z = [30, 45, 60];
 y = [data1.step_response(end), data2.step_response(end), data3.step_response(end)];
 figure;
 plot(z, y, "Marker", "o");
+xlabel('\(z\)', Interpreter='latex');
+ylabel('\(y\)', Interpreter='latex');

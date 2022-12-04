@@ -1,4 +1,5 @@
-function [U, Y, E] = DMC_rozmyty(D, N, Nu, lambda)
+function [U, Y, E] = DMC_fuzzy()
+    % TODO
     n=1000;
     n_s = 500;
 
@@ -7,12 +8,8 @@ function [U, Y, E] = DMC_rozmyty(D, N, Nu, lambda)
     
     U_min = -1;
     U_max = 1;
-    
-    Y_zad(1:49) = 0;
-    Y_zad(50:249) = 1;
-    Y_zad(250:599) = 2.5;
-    Y_zad(600:799) = 0.5;
-    Y_zad(800:n) = 1.5;
+
+    Y_zad = get_steering_trajectory();
     
     U(1:6) = Upp;
     Y(1:6) = Ypp;

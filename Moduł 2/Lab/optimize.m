@@ -61,6 +61,9 @@ figure
 hold on
 stairs(s)
 plot(y)
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+legend('Wektor \(s\)', 'Aproksymacja', 'Interpreter','latex', Location='southeast');
 
 T1 = Xz(1);
 T2 = Xz(2);
@@ -83,3 +86,6 @@ figure
 hold on
 stairs(sz)
 plot(y)
+yl = get(gca,'YTickLabel');
+set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+legend('Wektor \(s^\mathrm{z}\)', 'Aproksymacja', 'Interpreter','latex', Location='southeast');

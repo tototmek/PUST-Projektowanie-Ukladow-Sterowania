@@ -1,60 +1,32 @@
 function DMC_z()
-    clear all
     addpath('D:\SerialCommunication'); % add a path to the functions
     initSerialControl COM4 % initialise com port
-    step_response=[];
-    h = animatedline("Color", "r");
-    h_u = animatedline("Color", "b");
-    h_y_zad = animatedline("Color", "g");
-    k = 10; %% Może powinno być mniej
-
-%     U_min=0;
-%     U_max=100;
-%     dU_max=20;
-%     Tp=1.0;
+    k = 10;
     
-    Upp = 25;
-    Ypp = 33.43;
-    Zpp=0;
-    
-    % Wyznaczenie modelu odpowiedzi skokowej s
-    % [s, sz] = step_response_scaling(); %Stare - prawdopodobnie lepsze
-    % będą wersje aproksymowane:
+    % Wczytanie odpowiedzi skokowych
     data = load("step_responses_DMC.mat");
     s = data.s;
     sz = data.sz;
-
+    
+    % Parametry DMC
     D=500;
-    Dz=300;
+    Dz=700;
     N=300;
     Nu=100;
     lambda=0.1;
     
+    % Deklaracja oraz definicja odpowiednich sygnałów
     Y_zad(1:200) =  33.43;
     Y_zad(200:400) = 45;
     Y_zad(400:700) = 35;
     Y_zad(700:1000) = 40;
-    y_zad = zeros(950, 1);
-    u = ones(k, 1) * Upp;
-    y = ones(k, 1) * Ypp;
-    U = ones(k, 1) * Upp;
-    Y = ones(k, 1) * Ypp;
-    
-    Z(1:300) = 0; % - Z można zmieniać
+    U = ones(k, 1) * 25;
+    Y = ones(k, 1) * 33.43;
+    Z(1:300) = 0;
     Z(300:600) = 30;
     Z(600:1000) = 45;
     
-
-    %     T_z = 100;
-    %     
-    %     Z(1:T_z) = 0;
-    %     
-    % %     Z(T_z+1:n) = 1;
-    %     Z(T_z+1:n)=5*sin(linspace(0,1,n-T_z));
-    %     
-    %     noise = wgn(1,n,-10);
-    %     Z = Z + noise;
-    
+    % Obliczenia DMC offline
     M = zeros(N, Nu);
     for i = 1:N
         M(i,1)=s(i);
@@ -82,11 +54,10 @@ function DMC_z()
     dZ = zeros(Dz, 1);
 
     while(1)
-        % obtaining measurements
-        Y(k) = readMeasurements(1); % read measurements from 1 to 1
-        % processing of the measurements and new control values calculation
+        % Pomiar wyjścia obiektu
+        Y(k) = readMeasurements(1);
         
-        % Wyznaczanie sterowania DMC
+        % Obliczenia DMC online
         for p=1:D-1
             dUP(p) = 0;
             if k-p >0
@@ -96,8 +67,6 @@ function DMC_z()
                 dUP(p) = dUP(p) - U(k-p-1);
             end
         end
-        y_zad(k) = Y_zad(k);
-        y(k) = Y(k);
         
         Y_zad_dmc = Y_zad(k)*ones(N,1);
         Y0 = Y(k)*ones(N,1)+MP*dUP+MZP*dZ;
@@ -105,6 +74,14 @@ function DMC_z()
         
         U(k) = dU(1) + U(k-1);
         
+        dz=Z(k)-Z(k-1);
+        
+        for i=Dz:-1:2
+           dZ(i)=dZ(i-1);
+        end
+        dZ(1) = dz;
+
+        % Ograniczenia sterowania
         if U(k) > 100
             U(k) = 100;
         end
@@ -113,32 +90,11 @@ function DMC_z()
             U(k) = 0;
         end
         
-        dz=Z(k)-Z(k-1);
-        
-        for i=Dz:-1:2
-           dZ(i)=dZ(i-1);
-        end
-        dZ(1) = dz;
-        
-        save("DMC_test_chybaspoko_D290_N66_Nu33_L1");
-
-        %% Możliwe, że trzeba wziąć pod uwagę Upp!@!!
-        U(k)
-        Z(k)
+        % Wysyłanie sterowania do obiektu
         sendControlsToG1AndDisturbance(U(k), Z(k))
-        % sending new values of control signals
-        sendControls([1], ... send for these elements
-                     [50]);  % new corresponding control valuesdisp(measurements); % process measurements
-        
-        % synchronising with the control process
-        waitForNewIteration(); % wait for new batch of measurements to be ready
-        addpoints(h, k, Y(k));
-        addpoints(h_u, k, U(k));
-        addpoints(h_y_zad, k, Y_zad(k));
-        legend("y", "u", "y_z_a_d");
-        grid on;
-        grid minor;
-        drawnow
+        sendControls([1], ...
+                     [50]);
+        waitForNewIteration();
         k = k+1;
     end
 end
