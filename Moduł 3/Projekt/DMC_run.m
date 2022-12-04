@@ -1,9 +1,9 @@
 close all;
 
 D=100;
-N=50;
-Nu=20;
-lambda=50;
+N=29;
+Nu=2;
+lambda=0.01;
 
 n=1000;
 
