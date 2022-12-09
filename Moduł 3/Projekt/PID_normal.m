@@ -1,13 +1,18 @@
-function [U, Y, E] = PID_normal(K, Ti, Td)
+function E = PID_normal(X)
+    K = X(1);
+    Ti = X(2);
+    Td = X(3);
     n=1000;
-
-    Ypp = 0;
-    Upp = 0;
     
     U_min = -1;
     U_max = 1;
     
-    Y_zad = get_steering_trajectory();
+    global Upp;
+    global Ypp;
+
+%     Y_zad = get_steering_trajectory();
+    Y_zad(1:10) = Ypp - 0.01;
+    Y_zad(10:1000) = Ypp + 0.01; 
     
     U(1:6) = Upp;
     Y(1:6) = Ypp;

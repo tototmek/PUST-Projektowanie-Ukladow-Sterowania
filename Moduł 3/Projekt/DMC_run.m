@@ -1,7 +1,7 @@
 D=100;
 N=74;
 Nu=2;
-lambda=1.5547;
+lambda=10;
 
 [U, Y, E] = DMC_normal(D, N, Nu, lambda);
 Y_zad = get_steering_trajectory();

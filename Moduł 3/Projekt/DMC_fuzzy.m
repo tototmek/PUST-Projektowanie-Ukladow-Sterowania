@@ -1,20 +1,56 @@
 function [U, Y, E] = DMC_fuzzy()
-    % TODO
-    n=1000;
-    n_s = 500;
 
-    Ypp = 0;
-    Upp = 0;
+    reg_u = [-0.75, 0.25, 0.5]';
+    reg_y = zeros(size(reg_u));
+    n_regs = size(reg_u, 1);
+    for n = 1:n_regs
+        reg_y(n) = wartosc_y(reg_u(n));
+    end
+    plot(reg_u, reg_y, 'o');
+    reg_params = [100 74 2 1;
+                  100 74 2 1;
+                  100 74 2 1];
     
+    membership_functions = [-2, -1, -1, -0.5;
+                            -1, -0.5, 0, 0.5;
+                            0, 0.5, 1, 2];
+
+    %plot_membership_functions(membership_functions);
+
+
+    n_s = 500;
+    for index=1:n_regs
+        D = reg_params(index, 1);
+        N = reg_params(index, 2);
+        Nu = reg_params(index, 3);
+        lambda = reg_params(index, 4);
+        s = lokalny_model_odp_skok(reg_u(index), reg_y(index));
+        M = zeros(N, Nu);
+        for i = 1:N
+            M(i,1)=s(i);
+        end
+        for i=2:Nu
+            M(i:N,i)=M(1:N-i+1,1);
+        end
+        MP=zeros(N,D-1);
+        for i=1:N
+            for j=1:D-1
+                MP(i,j)=s(i+j)-s(j);
+            end
+        end
+        K = (M'*M + lambda*eye(Nu, Nu))\M';
+        dUP = zeros(D-1, 1);
+        K_matrix(index, :, :) = K;
+        MP_matrix(index, :, :) = MP;
+        dUP_matrix(index, :) = dUP;
+    end
+    
+    n=1000;
+    Y_zad = get_steering_trajectory();
     U_min = -1;
     U_max = 1;
-
-    Y_zad = get_steering_trajectory();
-    
-    U(1:6) = Upp;
-    Y(1:6) = Ypp;
-    
-    s = DMC_s_function(n_s);
+    U(1:6) = 0;
+    Y(1:6) = 0;
     
     M = zeros(N, Nu);
     for i = 1:N

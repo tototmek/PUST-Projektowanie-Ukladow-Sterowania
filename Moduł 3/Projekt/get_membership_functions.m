@@ -9,12 +9,11 @@ function fun_params = get_membership_functions(n_regulators,  bounds)
     end
     current_position = current_position + 2 * d;
     fun_params(n_regulators, :) = [current_position-d, current_position, current_position+d, current_position+d];
-
-    x = (bounds(1):0.001:bounds(2));
-    figure;
-    hold on;
-    for i = 1:n_regulators
-        func = trapmf(x, fun_params(i, :));
-        plot(x, func);
-    end
+%     x = (bounds(1):0.001:bounds(2));
+%     figure;
+%     hold on;
+%     for i = 1:n_regulators
+%         func = trapmf(x, fun_params(i, :));
+%         plot(x, func);
+%     end
 end
