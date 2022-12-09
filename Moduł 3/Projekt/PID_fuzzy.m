@@ -2,21 +2,28 @@ function [U, Y, E] = PID_fuzzy()
 
     % Parametry regulatorów lokalnych
     % Punkty pracy
-    reg_u = [-0.75, 0.25, 0.5]';
+    reg_u = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75]';
     reg_y = zeros(size(reg_u));
     n_regs = size(reg_u, 1);
     for n = 1:n_regs
         reg_y(n) = wartosc_y(reg_u(n));
     end
     % Parametry K, Ti, Td
-    reg_params = [0.4 7 0;
-                  0.3 7 0;
-                  0.2 7 0];
+    reg_params = [0.6 7 0.2;
+                  0.3 7 0.2;
+                  0.25 7 0.2;
+                  0.2 7 0.2;
+                  0.2 7 0.2;
+                  0.15 7 0.2;
+                  0.08 7 0.2];
     % Parametry funkcji przynależności
-    membership_functions = [-3, -2, -0.5, 0;
-                            -0.5, 0, 1, 1.5;
-                            1, 1.5, 7, 8];
-
+    membership_functions = [-10, -10, (2*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+2*reg_u(2)) / 4;
+                            (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4, (3*reg_u(2)+reg_u(3)) / 4, (reg_u(2)+3*reg_u(3)) / 4;
+                            (3*reg_u(2)+reg_u(3)) / 4, (reg_u(2)+3*reg_u(3)) / 4, (3*reg_u(3)+reg_u(4)) / 4, (reg_u(3)+3*reg_u(4)) / 4;
+                            (3*reg_u(3)+reg_u(4)) / 4, (reg_u(3)+3*reg_u(4)) / 4, (3*reg_u(4)+reg_u(5)) / 4, (reg_u(4)+3*reg_u(5)) / 4;
+                            (3*reg_u(4)+reg_u(5)) / 4, (reg_u(4)+3*reg_u(5)) / 4, (3*reg_u(5)+reg_u(6)) / 4, (reg_u(5)+3*reg_u(6)) / 4;
+                            (3*reg_u(5)+reg_u(6)) / 4, (reg_u(5)+3*reg_u(6)) / 4, (3*reg_u(6)+reg_u(7)) / 4, (reg_u(6)+3*reg_u(7)) / 4;
+                            (3*reg_u(6)+reg_u(7)) / 4, (reg_u(6)+3*reg_u(7)) / 4, 10, 10];
     % Wyznaczenie współczynników r dla regulatorów lokalnych
     Tp = 0.5;
     r0 = zeros(n_regs, 1);
@@ -49,7 +56,7 @@ function [U, Y, E] = PID_fuzzy()
         du = 0;
         total_mi = 0;
         for i = 1:n_regs
-            mi = trapmf(Y(k), membership_functions(i, :));
+            mi = trapmf(U(k-1), membership_functions(i, :));
             du = du + mi * (r0(i) * e(k) + r1(i) * e(k-1) + r2(i) * e(k-2));
             total_mi = total_mi + mi;
         end
@@ -69,6 +76,6 @@ function [U, Y, E] = PID_fuzzy()
 
     % Wyświetlenie wyników symulacji
     plot_results(Y, U, E, Y_zad);
-    %plot_membership_functions(membership_functions);
-    %plot_fuzzy_points(reg_u, reg_y);
+    plot_membership_functions(membership_functions);
+    plot_fuzzy_points(reg_u, reg_y);
 end
