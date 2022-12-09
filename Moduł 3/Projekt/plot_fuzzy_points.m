@@ -15,4 +15,6 @@ function plot_fuzzy_points(u, y)
     xl = get(gca, "XTickLabel");
     xl = strrep(xl, ".", ",");
     set(gca, "XTickLabel", xl);
+    xlabel("$u$", Interpreter="latex");
+    ylabel("$y$", Interpreter="latex");
 end

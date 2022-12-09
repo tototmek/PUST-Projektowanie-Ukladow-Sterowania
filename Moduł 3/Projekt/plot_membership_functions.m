@@ -7,3 +7,11 @@ function plot_membership_functions(fun_params)
         func = trapmf(x, fun_params(i, :));
         plot(x, func);
     end
+    yl = get(gca, "YTickLabel");
+    yl = strrep(yl, ".", ",");
+    set(gca, "YTickLabel", yl);
+    xl = get(gca, "XTickLabel");
+    xl = strrep(xl, ".", ",");
+    set(gca, "XTickLabel", xl);
+    xlabel("$y$", Interpreter="latex");
+    ylabel("SP", Interpreter="latex");

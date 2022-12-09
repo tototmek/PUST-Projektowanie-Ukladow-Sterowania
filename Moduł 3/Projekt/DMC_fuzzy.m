@@ -17,7 +17,6 @@ function [U, Y, E] = DMC_fuzzy()
                             -0.5, 0, 1, 1.5;
                             1, 1.5, 7, 8];
 
-
     % Wyznaczenie macierzy K, MP, dUP dla każdego regulatora lokalnego
     n_s = 500;
     for index=1:n_regs
@@ -56,8 +55,10 @@ function [U, Y, E] = DMC_fuzzy()
     
     % Symulacja
     for k=7:n
+        % Symulacja obiektu
         Y(k)=symulacja_obiektu5y_p3(U(k-5),U(k-6),Y(k-1),Y(k-2));
         
+        % Regulator DMC, wersja z regulacją rozmytą
         total_mi = 0;
         du = 0;
         for index=1:n_regs
@@ -89,19 +90,19 @@ function [U, Y, E] = DMC_fuzzy()
         end
         U(k) = du/total_mi + U(k-1);
 
+        % Ograniczenie wartości sterowania
         if U(k) > U_max
             U(k) = U_max;
         end
-
         if U(k) < U_min
             U(k) = U_min;
         end
-
     end
 
     % Obliczenie wartości wskaźnika jakości regulacji
     E = sum((Y_zad - Y).^2);
 
+    % Wyświetlenie wyników symulacji
     plot_results(Y, U, E, Y_zad);
     plot_membership_functions(membership_functions);
     plot_fuzzy_points(reg_u, reg_y);
