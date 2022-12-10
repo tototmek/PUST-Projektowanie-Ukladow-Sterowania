@@ -93,6 +93,6 @@ function [U, Y, E] = PID_fuzzy()
     disp(E);
     % Wyświetlenie wyników symulacji
     plot_results(Y, U, E, Y_zad);
-    % plot_membership_functions(membership_functions);
-    % plot_fuzzy_points(reg_u, reg_y);
+    plot_membership_functions(membership_functions);
+    plot_fuzzy_points(reg_u, reg_y);
 end

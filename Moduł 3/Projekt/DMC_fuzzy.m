@@ -2,38 +2,38 @@ function [U, Y, E] = DMC_fuzzy()
 
     % Parametry regulatorów lokalnych
     % Punkty pracy
-    % reg_u = [-0.75, 0.75]';
+    reg_u = [-0.75, 0.75]';
     % reg_u = [-0.75, 0.5, 0.75]';
     % reg_u = [-0.75, 0.25, 0.5, 0.75]';
     % reg_u = [-0.75, -0.25, 0.25, 0.5, 0.75]';
-    reg_u = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75]';
+    % reg_u = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75]';
     reg_y = zeros(size(reg_u));
     n_regs = size(reg_u, 1);
     for n = 1:n_regs
         reg_y(n) = wartosc_y(reg_u(n));
     end
     % Parametry D, N, Nu, lambda
-    % reg_params = [100 100 16 3
-    %               100 75 14 40];
+    reg_params = [100 100 16 1
+                  100 75 14 1];
+    % reg_params = [100 100 16 1;
+    %               100 60 15  1;
+    %               100 75 14  1];
+    % reg_params = [100 100 16 1;
+    %               100 32 14 1;
+    %               100 18 15 1;
+    %               100 75 14 1];
+    % reg_params = [100 100 16 1;
+    %               100 90 15 1;
+    %               100 32 14 1;
+    %               100 18 15 1;
+    %               100 75 14 1];
     % reg_params = [100 100 16 3;
-    %               100 60 15 15;
-    %               100 75 14 40];
-    % reg_params = [100 100 16 3;
-    %               100 32 14 4;
-    %               100 18 15 15;
-    %               100 75 14 40];
-    % reg_params = [100 100 16 3;
+    %               100 98 16 3;
     %               100 90 15 3;
+    %               100 90 16 3;
     %               100 32 14 4;
     %               100 18 15 15;
-    %               100 75 14 40];
-    reg_params = [100 100 16 3;
-                  100 100 16 3;
-                  100 90 15 3;
-                  100 100 16 3;
-                  100 32 14 4;
-                  100 18 15 15;
-                  100 75 14 46];
+    %               100 75 14 46];
     % Parametry funkcji przynależności
     membership_functions = zeros(n_regs, 4);
     membership_functions(1, :) = [-10, -10, (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4];
@@ -129,7 +129,9 @@ function [U, Y, E] = DMC_fuzzy()
     E = sum((Y_zad - Y).^2);
     disp(E)
     % Wyświetlenie wyników symulacji
-    plot_results(Y, U, E, Y_zad);
-    % plot_membership_functions(membership_functions);
-    % plot_fuzzy_points(reg_u, reg_y);
+    %plot_results(Y, U, E, Y_zad);
+    plot_membership_functions(membership_functions);
+    print(sprintf("plots/dmc/%ddmcmf", n_regs), "-depsc", "-r400")
+    %plot_fuzzy_points(reg_u, reg_y);
+    close all
 end

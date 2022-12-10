@@ -13,5 +13,5 @@ function plot_membership_functions(fun_params)
     xl = get(gca, "XTickLabel");
     xl = strrep(xl, ".", ",");
     set(gca, "XTickLabel", xl);
-    xlabel("$y$", Interpreter="latex");
+    xlabel("$u$", Interpreter="latex");
     ylabel("SP", Interpreter="latex");
