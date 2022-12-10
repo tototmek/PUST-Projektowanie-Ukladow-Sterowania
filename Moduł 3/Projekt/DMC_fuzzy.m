@@ -2,6 +2,10 @@ function [U, Y, E] = DMC_fuzzy()
 
     % Parametry regulatorów lokalnych
     % Punkty pracy
+    % reg_u = [-0.75, 0.75]';
+    % reg_u = [-0.75, 0.5, 0.75]';
+    % reg_u = [-0.75, 0.25, 0.5, 0.75]';
+    % reg_u = [-0.75, -0.25, 0.25, 0.5, 0.75]';
     reg_u = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75]';
     reg_y = zeros(size(reg_u));
     n_regs = size(reg_u, 1);
@@ -9,22 +13,38 @@ function [U, Y, E] = DMC_fuzzy()
         reg_y(n) = wartosc_y(reg_u(n));
     end
     % Parametry D, N, Nu, lambda
-    reg_params = [100 74 2 5
-                  100 74 2 5;
-                  100 74 2 5;
-                  100 74 2 5;
-                  100 74 2 5;
-                  100 74 2 5;
-                  100 74 2 5];
+    % reg_params = [100 100 16 3
+    %               100 75 14 40];
+    % reg_params = [100 100 16 3;
+    %               100 60 15 15;
+    %               100 75 14 40];
+    % reg_params = [100 100 16 3;
+    %               100 32 14 4;
+    %               100 18 15 15;
+    %               100 75 14 40];
+    % reg_params = [100 100 16 3;
+    %               100 90 15 3;
+    %               100 32 14 4;
+    %               100 18 15 15;
+    %               100 75 14 40];
+    reg_params = [100 100 16 3;
+                  100 100 16 3;
+                  100 90 15 3;
+                  100 100 16 3;
+                  100 32 14 4;
+                  100 18 15 15;
+                  100 75 14 46];
     % Parametry funkcji przynależności
-    membership_functions = [-10, -10, (2*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+2*reg_u(2)) / 4;
-                            (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4, (3*reg_u(2)+reg_u(3)) / 4, (reg_u(2)+3*reg_u(3)) / 4;
-                            (3*reg_u(2)+reg_u(3)) / 4, (reg_u(2)+3*reg_u(3)) / 4, (3*reg_u(3)+reg_u(4)) / 4, (reg_u(3)+3*reg_u(4)) / 4;
-                            (3*reg_u(3)+reg_u(4)) / 4, (reg_u(3)+3*reg_u(4)) / 4, (3*reg_u(4)+reg_u(5)) / 4, (reg_u(4)+3*reg_u(5)) / 4;
-                            (3*reg_u(4)+reg_u(5)) / 4, (reg_u(4)+3*reg_u(5)) / 4, (3*reg_u(5)+reg_u(6)) / 4, (reg_u(5)+3*reg_u(6)) / 4;
-                            (3*reg_u(5)+reg_u(6)) / 4, (reg_u(5)+3*reg_u(6)) / 4, (3*reg_u(6)+reg_u(7)) / 4, (reg_u(6)+3*reg_u(7)) / 4;
-                            (3*reg_u(6)+reg_u(7)) / 4, (reg_u(6)+3*reg_u(7)) / 4, 10, 10];
+    membership_functions = zeros(n_regs, 4);
+    membership_functions(1, :) = [-10, -10, (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4];
+    for index=2:n_regs-1
+        membership_functions(index, :) = [(3*reg_u(index-1)+reg_u(index)) / 4, (reg_u(index-1)+3*reg_u(index)) / 4, (3*reg_u(index)+reg_u(index+1)) / 4, (reg_u(index)+3*reg_u(index+1)) / 4];
+    end
+    membership_functions(end, :) = [(3*reg_u(end-1)+reg_u(end)) / 4, (reg_u(end-1)+3*reg_u(end)) / 4, 10, 10];
     % Wyznaczenie macierzy K, MP, dUP dla każdego regulatora lokalnego
+    K_matrix = cell(n_regs, 1);
+    MP_matrix = cell(n_regs, 1);
+    dUP_matrix = cell(n_regs, 1);
     n_s = 500;
     for index=1:n_regs
         D = reg_params(index, 1);
@@ -47,9 +67,9 @@ function [U, Y, E] = DMC_fuzzy()
         end
         K = (M'*M + lambda*eye(Nu, Nu))\M';
         dUP = zeros(D-1, 1);
-        K_matrix(index, :, :) = K;
-        MP_matrix(index, :, :) = MP;
-        dUP_matrix(index, :) = dUP;
+        K_matrix{index} = K;
+        MP_matrix{index} = MP;
+        dUP_matrix{index} = dUP;
     end
     
     % Parametry symulacji
@@ -70,9 +90,9 @@ function [U, Y, E] = DMC_fuzzy()
         for index=1:n_regs
             D = reg_params(index, 1);
             N = reg_params(index, 2);
-            dUP = squeeze(dUP_matrix(index, :));
-            MP = squeeze(MP_matrix(index, :, :));
-            K = squeeze(K_matrix(index, :, :));
+            dUP = dUP_matrix{index};
+            MP = MP_matrix{index};
+            K = K_matrix{index};
             
             for p=1:D-1
                 dUP(p) = 0;
@@ -84,10 +104,10 @@ function [U, Y, E] = DMC_fuzzy()
                 end
             end
 
-            dUP_matrix(index, :) = dUP;
+            dUP_matrix{index} = dUP;
             
             Y_zad_dmc = Y_zad(k)*ones(N,1);
-            Y0 = Y(k)*ones(N,1)+MP*dUP';
+            Y0 = Y(k)*ones(N,1)+MP*dUP;
             dU = K*(Y_zad_dmc-Y0);
 
             mi = trapmf(U(k-1), membership_functions(index, :));
@@ -107,9 +127,9 @@ function [U, Y, E] = DMC_fuzzy()
 
     % Obliczenie wartości wskaźnika jakości regulacji
     E = sum((Y_zad - Y).^2);
-
+    disp(E)
     % Wyświetlenie wyników symulacji
     plot_results(Y, U, E, Y_zad);
-    plot_membership_functions(membership_functions);
-    plot_fuzzy_points(reg_u, reg_y);
+    % plot_membership_functions(membership_functions);
+    % plot_fuzzy_points(reg_u, reg_y);
 end

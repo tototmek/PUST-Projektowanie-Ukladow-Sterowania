@@ -2,28 +2,45 @@ function [U, Y, E] = PID_fuzzy()
 
     % Parametry regulatorów lokalnych
     % Punkty pracy
-    reg_u = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75]';
+    reg_u = [-0.75, 0.75]';
+    % reg_u = [-0.75, 0.5, 0.75]';
+    % reg_u = [-0.75, 0.25, 0.5, 0.75]';
+    % reg_u = [-0.75, -0.25, 0.25, 0.5, 0.75]';
+    % reg_u = [-0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75]';
     reg_y = zeros(size(reg_u));
     n_regs = size(reg_u, 1);
     for n = 1:n_regs
         reg_y(n) = wartosc_y(reg_u(n));
     end
     % Parametry K, Ti, Td
-    reg_params = [0.6 7 0.2;
-                  0.3 7 0.2;
-                  0.25 7 0.2;
-                  0.2 7 0.2;
-                  0.2 7 0.2;
-                  0.15 7 0.2;
-                  0.08 7 0.2];
+    reg_params = [0.7 3 0.1;
+                  0.18 10 0.2];
+    % reg_params = [0.7 3 0.1;
+    %               0.19 4 0.2;
+    %               0.18 10 0.2];
+    % reg_params = [0.7 3 0.1;
+    %               0.5 3.7 0.13;
+    %               0.19 4 0.2;
+    %               0.18 10 0.2];
+    % reg_params = [0.7 3 0.1;
+    %               0.5 1.8 0.08;
+    %               0.5 3.7 0.13;
+    %               0.19 4 0.2;
+    %               0.18 10 0.2];
+    % reg_params = [0.7 3 0.1;
+    %               0.62 2.1 0.03;
+    %               0.5 1.8 0.08;
+    %               0.4 3 0.1;
+    %               0.5 3.7 0.13;
+    %               0.19 4 0.2;
+    %               0.18 10 0.2];
     % Parametry funkcji przynależności
-    membership_functions = [-10, -10, (2*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+2*reg_u(2)) / 4;
-                            (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4, (3*reg_u(2)+reg_u(3)) / 4, (reg_u(2)+3*reg_u(3)) / 4;
-                            (3*reg_u(2)+reg_u(3)) / 4, (reg_u(2)+3*reg_u(3)) / 4, (3*reg_u(3)+reg_u(4)) / 4, (reg_u(3)+3*reg_u(4)) / 4;
-                            (3*reg_u(3)+reg_u(4)) / 4, (reg_u(3)+3*reg_u(4)) / 4, (3*reg_u(4)+reg_u(5)) / 4, (reg_u(4)+3*reg_u(5)) / 4;
-                            (3*reg_u(4)+reg_u(5)) / 4, (reg_u(4)+3*reg_u(5)) / 4, (3*reg_u(5)+reg_u(6)) / 4, (reg_u(5)+3*reg_u(6)) / 4;
-                            (3*reg_u(5)+reg_u(6)) / 4, (reg_u(5)+3*reg_u(6)) / 4, (3*reg_u(6)+reg_u(7)) / 4, (reg_u(6)+3*reg_u(7)) / 4;
-                            (3*reg_u(6)+reg_u(7)) / 4, (reg_u(6)+3*reg_u(7)) / 4, 10, 10];
+    membership_functions = zeros(n_regs, 4);
+    membership_functions(1, :) = [-10, -10, (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4];
+    for index=2:n_regs-1
+        membership_functions(index, :) = [(3*reg_u(index-1)+reg_u(index)) / 4, (reg_u(index-1)+3*reg_u(index)) / 4, (3*reg_u(index)+reg_u(index+1)) / 4, (reg_u(index)+3*reg_u(index+1)) / 4];
+    end
+    membership_functions(end, :) = [(3*reg_u(end-1)+reg_u(end)) / 4, (reg_u(end-1)+3*reg_u(end)) / 4, 10, 10];
     % Wyznaczenie współczynników r dla regulatorów lokalnych
     Tp = 0.5;
     r0 = zeros(n_regs, 1);
@@ -73,9 +90,9 @@ function [U, Y, E] = PID_fuzzy()
 
     % Obliczenie wartości wskaźnika jakości regulacji
     E = sum((Y_zad - Y).^2);
-
+    disp(E);
     % Wyświetlenie wyników symulacji
     plot_results(Y, U, E, Y_zad);
-    plot_membership_functions(membership_functions);
-    plot_fuzzy_points(reg_u, reg_y);
+    % plot_membership_functions(membership_functions);
+    % plot_fuzzy_points(reg_u, reg_y);
 end
