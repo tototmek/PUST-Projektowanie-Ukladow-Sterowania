@@ -2,7 +2,6 @@ function DMC()
     clear all
     addpath('D:\SerialCommunication'); % add a path to the functions
     initSerialControl COM4 % initialise com port
-    step_response=[];
     h = animatedline("Color", "r");
     h_u = animatedline("Color", "b");
     h_y_zad = animatedline("Color", "g");
@@ -23,16 +22,16 @@ function DMC()
     N=300;
     Nu=100;
     lambda=0.1;
-    
-    y_zad(1:350) = 33.8;
-    y_zad(350:600) = 33.8+5;
-    y_zad(600:750) = 33.8+15;
-    y_zad(750:1000) = 33.8;
+    y_zad(1:10) = 0;
+    y_zad(10:300) = 33.8;
+    y_zad(300:500) = 33.8+5;
+    y_zad(500:700) = 33.8+15;
+    y_zad(700:1000) = 33.8;
     Y_zad = y_zad;
     
     u = zeros(k, 1);
     y = zeros(k, 1);
-    U = ones(k, 1) * Upp;
+    U = zeros(k, 1);
     Y = ones(k, 1) * Ypp;
     
     M = zeros(N, Nu);
