@@ -10,4 +10,4 @@ Y_pp = ypp * ones(size(old_s));
 
 s = (old_s - Y_pp) / du;
 
-%stairs(s);
+stairs(s);

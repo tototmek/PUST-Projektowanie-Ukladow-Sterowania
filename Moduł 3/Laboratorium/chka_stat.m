@@ -1,10 +1,12 @@
-data1 = load("step_response_20.mat");
-data2 = load("step_response_30.mat");
-data3 = load("step_response_40.mat");
-data4 = load("step_response_50.mat");
-data5 = load("step_response_60.mat");
-data6 = load("step_response_70.mat");
-data7 = load("step_response_80.mat");
+clear all;
+
+data1 = load("./data/step_response_20.mat");
+data2 = load("./data/step_response_30.mat");
+data3 = load("./data/step_response_40.mat");
+data4 = load("./data/step_response_50.mat");
+data5 = load("./data/step_response_60.mat");
+data6 = load("./data/step_response_70.mat");
+data7 = load("./data/step_response_80.mat");
 
 u(1) = data1.u;
 y(1) = data1.y(end);
@@ -23,4 +25,16 @@ y(7) = data7.y(end);
 
 figure;
 plot(u, y);
+hold on;
+plot(u, y, 'o');
+ylabel('$y$', 'Interpreter','latex');
+xlabel('$u$', 'Interpreter','latex');
+
+% yl = get(gca,'YTickLabel');
+% set(gca, 'YTickLabel', strrep(yl(:),'.',','))
+
+
+set(groot,'defaultAxesTickLabelInterpreter','latex'); 
+set(gcf,'units','points','position',[100 100 450 300]);
+% print('plots/zad_2_chka_stat','-depsc','-r400');  % Zapisywanie wykresu
 
