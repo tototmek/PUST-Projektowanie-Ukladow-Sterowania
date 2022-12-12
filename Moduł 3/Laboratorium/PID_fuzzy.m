@@ -15,9 +15,9 @@ function PID_fuzzy()
     n_regs = size(reg_u, 1);
 
     % Parametry regulatorów lokalnych
-    reg_params = [0.7 3 0.1;
-                  0.19 4 0.2;
-                  0.18 10 0.2];
+    reg_params = [11 40 0.5;
+                  11 40 0.5;
+                  11 40 0.5];
 
     membership_functions(1, :) = [-10, -10, (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4];
         for index=2:n_regs-1

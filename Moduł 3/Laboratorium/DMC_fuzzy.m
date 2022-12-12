@@ -16,9 +16,9 @@ function DMC_fuzzy()
     reg_y = zeros(size(reg_u));
     n_regs = size(reg_u, 1);
 
-    reg_params = [100 100 16 1;
-                  100 60 15 1;
-                  100 75 14 1];
+    reg_params = [500 500 500 1;
+                  500 500 500 1;
+                  500 500 500 1];
 
     membership_functions(1, :) = [-10, -10, (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4];
         for index=2:n_regs-1
