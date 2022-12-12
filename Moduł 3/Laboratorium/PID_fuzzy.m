@@ -15,15 +15,24 @@ function PID_fuzzy()
     n_regs = size(reg_u, 1);
 
     % Parametry regulatorów lokalnych
-    reg_params = [11 40 0.5;
-                  11 40 0.5;
-                  11 40 0.5];
+%     reg_params = [8.5 44 0.5;
+%                   11 40 0.5;
+%                   13 39 0.5];
+%     reg_params = [11 40 0.5;
+%                   13 35 0.5;
+%                   15 31 0.5];
+%      reg_params = [14 35 0.2;
+%                    18 29 0.2;
+%                    22 20 0.2];
+      reg_params = [18 31 0.2;
+                    21 26 0.2;
+                    25 17 0.2];
+
+
 
     membership_functions(1, :) = [-10, -10, (3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4];
-        for index=2:n_regs-1
-            membership_functions(index, :) = [(3*reg_u(index-1)+reg_u(index)) / 4, (reg_u(index-1)+3*reg_u(index)) / 4, (3*reg_u(index)+reg_u(index+1)) / 4, (reg_u(index)+3*reg_u(index+1)) / 4];
-        end
-    membership_functions(end, :) = [(3*reg_u(end-1)+reg_u(end)) / 4, (reg_u(end-1)+3*reg_u(end)) / 4, 100, 100];
+    membership_functions(2, :) = [(3*reg_u(1)+reg_u(2)) / 4, (reg_u(1)+3*reg_u(2)) / 4, (3*reg_u(end-1)+reg_u(end)) / 4, (reg_u(end-1)+3*reg_u(end)) / 4];
+    membership_functions(3, :) = [(3*reg_u(end-1)+reg_u(end)) / 4, (reg_u(end-1)+3*reg_u(end)) / 4, 100, 100];
 
     y_zad(1:10) = 0;
     y_zad(10:300) = 33.8;
@@ -58,7 +67,7 @@ function PID_fuzzy()
         du = 0;
         total_mi = 0;
         for i = 1:n_regs
-            mi = trapmf(U(k-1), membership_functions(i, :));
+            mi = trapmf(u(k-1), membership_functions(i, :));
             du = du + mi * (r0(i) * e(k) + r1(i) * e(k-1) + r2(i) * e(k-2));
             total_mi = total_mi + mi;
         end
@@ -82,7 +91,7 @@ function PID_fuzzy()
         if u(k) < U_min
             u(k) = U_min;
         end
-        save("fuzzy_pid.mat");
+        save("fuzzy_pid4.mat");
 
         %% Możliwe, że trzeba wziąć pod uwagę Upp!@!!
 
