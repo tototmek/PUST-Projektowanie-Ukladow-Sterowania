@@ -140,4 +140,4 @@ xlim([0 n_new])
 
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(gcf,'units','points','position',[100 100 450 400]);
-print('plots/zad_3_pid','-depsc','-r400');  % Zapisywanie wykresu
+% print('plots/xxxxx','-depsc','-r400');  % Zapisywanie wykresu
