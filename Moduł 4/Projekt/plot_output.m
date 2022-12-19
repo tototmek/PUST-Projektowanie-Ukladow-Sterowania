@@ -12,11 +12,14 @@ function plot_output(u, y, y_zad)
     first = true;
     for y_index = 1:ny
         subplot(ny+1,1,y_index);
+        max_value = max(max(y_zad(y_index, :)), max(y(y_index, :)));
+        min_value = min(min(y_zad(y_index, :)), min(y(y_index, :)));
+        delta = max_value - min_value;
         stairs(y(y_index, :));
         hold on;
         stairs(y_zad(y_index, :),':');
         xlim([0 length])
-        ylim([-0.15, 1.15])
+        ylim([min_value - 0.1 * delta, max_value + 0.1 * delta])
         yl = get(gca, "YTickLabel");
         yl = strrep(yl, ".", ",");
         set(gca, "YTickLabel", yl);

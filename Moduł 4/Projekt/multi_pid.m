@@ -6,8 +6,8 @@ function [u, y, y_zad] = multi_pid()
     % u4, y3
 
     % Nastawy regulatorów
-    K = [1, 1, 1];
-    Ti = [100, 100, 100];
+    K = [2, 2, 2];
+    Ti = [2, 3, 10];
     Td = [0, 0, 0];
     % Czas próbkowania
     Tp = [0.5, 0.5, 0.5];
