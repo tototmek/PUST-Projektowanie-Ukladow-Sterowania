@@ -1,7 +1,7 @@
 function yzad = trajektoria_zadana()
     % Funkcja zwracająca zadany przebieg wyjść obiektu
 
-    period = 200;
+    period = 350;
     old_k = 1;
     k = 50;
     yzad1(old_k:k) = 0;
