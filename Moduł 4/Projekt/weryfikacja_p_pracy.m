@@ -7,7 +7,7 @@ n=200;
 
 Upp1=0;
 Upp2=0;
-Upp3=1;
+Upp3=0;
 Upp4=0;
 
 Ypp1=0;
@@ -37,56 +37,56 @@ end
 figure;
 hold on;
 subplot(2,4,1);
-stairs(u1, "r");
-ylabel('$u1$', 'Interpreter','latex');
+stairs(u1, Color="#D95319");
+ylabel('$u_1$', 'Interpreter','latex');
 xlabel('$k$', 'Interpreter','latex');
 
 yl = get(gca,'YTickLabel');
 set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 subplot(2,4,2);
-stairs(u2, "r");
-ylabel('$u2$', 'Interpreter','latex');
+stairs(u2, Color="#D95319");
+ylabel('$u_2$', 'Interpreter','latex');
 xlabel('$k$', 'Interpreter','latex');
 
 yl = get(gca,'YTickLabel');
 set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 subplot(2,4,3);
-stairs(u3, "r");
-ylabel('$u3$', 'Interpreter','latex');
+stairs(u3, Color="#D95319");
+ylabel('$u_3$', 'Interpreter','latex');
 xlabel('$k$', 'Interpreter','latex');
 
 yl = get(gca,'YTickLabel');
 set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 subplot(2,4,4);
-stairs(u4, "r");
-ylabel('$u4$', 'Interpreter','latex');
+stairs(u4, Color="#D95319");
+ylabel('$u_4$', 'Interpreter','latex');
 xlabel('$k$', 'Interpreter','latex');
 
 yl = get(gca,'YTickLabel');
 set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 subplot(2,4,5);
-stairs(y1, "b");
-ylabel('$y1$', 'Interpreter','latex');
+stairs(y1);
+ylabel('$y_1$', 'Interpreter','latex');
 xlabel('$k$', 'Interpreter','latex');
 
 yl = get(gca,'YTickLabel');
 set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 subplot(2,4,6);
-stairs(y2, "b");
-ylabel('$y2$', 'Interpreter','latex');
+stairs(y2);
+ylabel('$y_2$', 'Interpreter','latex');
 xlabel('$k$', 'Interpreter','latex');
 
 yl = get(gca,'YTickLabel');
 set(gca, 'YTickLabel', strrep(yl(:),'.',','))
 
 subplot(2,4,7);
-stairs(y3, "b");
-ylabel('$y3$', 'Interpreter','latex');
+stairs(y3);
+ylabel('$y_3$', 'Interpreter','latex');
 xlabel('$k$', 'Interpreter','latex');
 
 yl = get(gca,'YTickLabel');
