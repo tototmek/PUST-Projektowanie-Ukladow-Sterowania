@@ -6,8 +6,11 @@ function [u, y, y_zad] = multi_pid()
     % u4, y3
 
     % Nastawy regulatorów
-    K = [2, 2, 2];
-    Ti = [2, 3, 10];
+    % K = [1, 1.6, 1.2];
+    % Ti = [2, 3, 5];
+    % Td = [0.1, 1, 2];
+    K = [1, 1, 1];
+    Ti = [13, 13, 13];
     Td = [0, 0, 0];
     % Czas próbkowania
     Tp = [0.5, 0.5, 0.5];
@@ -44,8 +47,8 @@ function [u, y, y_zad] = multi_pid()
 
         % Wyliczenie sterowania regulatorów
         u(1, k) = 0;
-        u(2, k) = u(2, k-1) + r0(1) * e(1, k) + r1(1) * e(1, k-1) +  r2(1) * e(1, k-2);
-        u(3, k) = u(3, k-1) + r0(2) * e(2, k) + r1(2) * e(2, k-1) +  r2(2) * e(2, k-2);
+        u(3, k) = u(3, k-1) + r0(1) * e(1, k) + r1(1) * e(1, k-1) +  r2(1) * e(1, k-2);
+        u(2, k) = u(2, k-1) + r0(2) * e(2, k) + r1(2) * e(2, k-1) +  r2(2) * e(2, k-2);
         u(4, k) = u(4, k-1) + r0(3) * e(3, k) + r1(3) * e(3, k-1) +  r2(3) * e(3, k-2);
     end
 end
