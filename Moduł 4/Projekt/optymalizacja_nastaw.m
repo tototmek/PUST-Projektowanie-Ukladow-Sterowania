@@ -5,7 +5,7 @@ function optymalizacja_nastaw()
               [0.001 0.001 0.001 0.001 0 0 0], ...
               [100 100 100 100 10 10 10]);
     disp(X);
-    [u, y, y_zad] = multi_pid(100, 23, 12, X(1:4), X(5:7));
+    [u, y, y_zad] = multi_dmc(100, 31, 8, X(1:4), X(5:7));
     plot_output(u, y, y_zad);
 
     % Algorytm PID
@@ -20,8 +20,8 @@ end
 
 function E = dmc_e(X)
     D = 100;
-    N = 23;
-    Nu = 12;
+    N = 31;
+    Nu = 8;
     lambda = X(1:4);
     mi = X(5:7);
     [~, y, y_zad] = multi_dmc(D, N, Nu, lambda, mi);
@@ -29,7 +29,7 @@ function E = dmc_e(X)
     for i = 1:3
         E = E + sum((y_zad(i, :) - y(i, :)).^2);
     end
-    disp(E);
+    %disp(E);
 end
 
 function E = pid_e(X)
@@ -41,5 +41,5 @@ function E = pid_e(X)
     for i = 1:3
         E = E + sum((y_zad(i, :) - y(i, :)).^2);
     end
-    disp(E);
+    %disp(E);
 end
