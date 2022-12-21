@@ -1,14 +1,7 @@
-function [u, y, y_zad] = multi_dmc()
+function [u, y, y_zad] = multi_dmc(D, N, Nu, lambda, mi)
     % Parametry procesu
     ny = 3;
     nu = 4;
-
-    % Parametry regulatora
-    D = 100;
-    N = 31;
-    Nu = 8;
-    mi = [1 1.5 1.6];
-    lambda = [0.25 0.45 0.05 0.27];
 
     % Wczytanie modelu odpowiedzi skokowej
     data = load("s.mat");
