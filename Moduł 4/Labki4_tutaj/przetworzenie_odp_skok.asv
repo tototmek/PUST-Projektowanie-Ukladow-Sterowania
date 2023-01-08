@@ -1,0 +1,6 @@
+data = load("data/skok_u1.mat");
+up = data.u1(0);
+uk = data.u1(end);
+t_skok = 0
+for k = 1:up
+up = 

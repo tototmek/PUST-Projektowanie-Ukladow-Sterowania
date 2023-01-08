@@ -1,0 +1,18 @@
+data1 = load("skok_u1.mat");
+%%
+% 
+% <latex>
+% \begin{tabular}{|c|c|} \hline
+% $n$ & $n!$ \\ \hline
+% 1 & 1 \\
+% 2 & 2 \\
+% 3 & 6 \\ \hline
+% \end{tabular}
+% </latex>
+% 
+data2 = load("skok_u2.mat");
+
+y11 = data1.y1;
+y21 = data1.y2;
+y12 = data2.y1;
+y22 = data2.y2;

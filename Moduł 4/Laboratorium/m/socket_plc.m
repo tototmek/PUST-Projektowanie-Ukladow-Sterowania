@@ -24,15 +24,15 @@ yz1 = [];
 yz2 = [];
 
 figure(1);
-while (length(y1) < 100)
+while (length(y1) < 150)
     if (t.BytesAvailable ~= 0)
         temp = fscanf(t);
         %disp(temp);
         eval(temp);
-        u1 = [u1; U1];
-        u2 = [u2; U2];
-        y1 = [y1; Y1];
-        y2 = [y2; Y2];
+        u1 = [u1; U1/10];
+        u2 = [u2; U2/10];
+        y1 = [y1; Y1/100];
+        y2 = [y2; Y2/100];
         yz1 = [yz1; YZ1];
         yz2 = [yz2; YZ2];
         
@@ -42,7 +42,7 @@ while (length(y1) < 100)
     end
     pause(0.05);
 end
-
+save("test_stanowsika")
 fclose(t);
 delete(t);
 clear t;
