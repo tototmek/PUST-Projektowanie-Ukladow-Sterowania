@@ -1,18 +1,21 @@
 function [u, y, y_zad] = multi_dmc_oszczedny()
-    D = 200;
-    N = 20;
-    Nu = 10;
-    lambda = [1, 1, 1, 1];
-    mi = [1, 1, 1];
     % Parametry procesu
     ny = 3;
     nu = 4;
+
+    % Parametry regulatora
+    D = 100;
+    N = 40;
+    Nu = 15;
+    mi = [1 1 1];
+    lambda = [1 1 1 1];
 
     % Wczytanie modelu odpowiedzi skokowej
     data = load("s.mat");
     s =  data.s;
 
     % Obliczenia offline dla regulatora DMC
+    % Definicja macierzy Psi
     Psi = zeros(ny * N, ny * N);
     for i = 1:ny
         for j = 1:N
@@ -20,7 +23,8 @@ function [u, y, y_zad] = multi_dmc_oszczedny()
             Psi(index, index) = mi(i);
         end
     end
-    
+
+    %Definicja macierzy Lambda
     Lambda = zeros(nu * Nu, nu * Nu);
     for i = 1:nu
         for j = 1:Nu
@@ -28,7 +32,8 @@ function [u, y, y_zad] = multi_dmc_oszczedny()
             Lambda(index, index) = lambda(i);
         end
     end
-    
+
+    % Wyznaczenie macierzy M
     for i = 1:N
         for j = 1:Nu
             index = i - j + 1;
@@ -41,20 +46,25 @@ function [u, y, y_zad] = multi_dmc_oszczedny()
     end
     M = cell2mat(M);
 
+    % Wyznaczenie macierzy K
     K = (M' * Psi * M + Lambda)^-1 * M' * Psi;
 
+    % Wyznaczenie macierzy MP
     for i=1:N
         for j=1:D-1
-           MP{i, j} = squeeze(s(i+j, :, :)) - squeeze(s(j, :, :));
+           MP{i, j} = squeeze(s(i+j, :, :)) ...
+            - squeeze(s(j, :, :));
         end
     end
     MP = cell2mat(MP);
 
+    % Wyznaczenie macierzy Ke
     Ke = zeros(nu, ny);
     for p = 1:N
         Ke = Ke + K(1:nu, ny * (p - 1) + 1:ny * p);
     end
 
+    % Wyznaczenie macierzy Ku
     Ku = zeros(D-1, nu, nu);
     for i = 1:D-1
         K_ = K(1:nu, :);
@@ -94,10 +104,10 @@ function [u, y, y_zad] = multi_dmc_oszczedny()
         sum = zeros(nu, 1);
         for i = 1:D-1
             if k - i >= 1
-                sum = sum + squeeze(Ku(i, :, :)) * squeeze(du(:, k - i));
+                sum = sum + squeeze(Ku(i, :, :)) ...
+                    * squeeze(du(:, k - i));
             end
         end
-
         du(:, k) = Ke * (Y_zad - Y) - sum;
         
         for i = 1:nu
