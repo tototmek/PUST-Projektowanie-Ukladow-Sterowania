@@ -1,0 +1,146 @@
+Regulator:
+
+y_1 := INT_TO_REAL(D100) / 100.0;
+y_2 := INT_TO_REAL(D102) / 100.0;
+u_1 := INT_TO_REAL(D114) / 10.0;
+u_2 := INT_TO_REAL(D115) / 10.0;
+
+e_1 := yzad_1 - y_1;
+e_2 := yzad_2 - y_2;
+
+u_1 := u_1_k_1 + r0_1 * e_1 + r1_1 * e_1_k_1 + r2_1 * e_1_k_1;
+u_2 := u_2_k_1 + r0_2 * e_2 + r1_2 * e_2_k_1 + r2_2 * e_2_k_1;
+
+IF u_1 > 100.0 THEN
+	u_1 := 100.0;
+END_IF;
+
+IF u_2 > 100.0 THEN
+	u_2 := 100.0;
+END_IF;
+
+IF u_1 < 0.0 THEN
+	u_1 := 0.0;
+END_IF;
+
+IF u_2 < 0.0 THEN
+	u_2 := 0.0;
+END_IF;
+
+u_1_k_1 := u_1;
+u_2_k_1 := u_2;
+e_1_k_2 := e_1_k_1;
+e_1_k_1 := e_1;
+e_2_k_2 := e_2_k_1;
+e_2_k_1 := e_2;
+
+
+IF y_1 > 250.0 OR y_2 > 250.0 THEN
+	u_1 := 0.0;
+	u_2 := 0.0;
+END_IF;
+
+D114 := REAL_TO_INT(u_1 * 10.0);
+D115 := REAL_TO_INT(u_2 * 10.0);
+
+
+
+
+
+
+// Automat stanowy
+count := count + 1;
+IF count > 64 THEN
+	count := 0;
+	IF state = 3 THEN
+		state := 4;
+		yzad_1 := 35.0;
+		yzad_2 := 35.0;
+	END_IF;
+	IF state = 2 THEN
+		state := 3;
+		yzad_1 := 35.0;
+		yzad_2 := 45.0;
+	END_IF;
+	IF state = 1 THEN
+		state := 2;
+		yzad_1 := 45.0;
+		yzad_2 := 45.0;
+	END_IF;
+	IF state = 0 THEN
+		state := 1;
+		yzad_1 := 45.0;
+		yzad_2 := 35.0;
+	END_IF;
+	IF state = 4 THEN
+		state := 0;
+	END_IF;
+END_IF;
+
+SocketComm
+
+
+// Sprawdzenie otwartego polaczenia
+SP_SOCCINF( SD10680.0 , 'U0' , K1 , Control_data_SOCCINF , Conn_info_SOCCINF );
+
+
+OUT(SD10680.0 AND SM412, Y17);
+
+//IF AUTO_SEND AND LDP(TRUE, SM414) THEN
+IF AUTO_SEND AND LDP(TRUE, SM412) THEN
+
+//Generacja tesktu do wyslania przez socket communication
+
+	text_temp := 'Y1=';
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_1));
+
+	text_temp := CONCAT(text_temp,';Y2=');	
+	
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_2));	
+	
+	text_temp := CONCAT(text_temp,';U1=');
+	
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_1));	
+
+	text_temp := CONCAT(text_temp,';U2=');
+		
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_2));	
+	
+	text_temp := CONCAT(text_temp,';Yz1=');
+	
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_1));	
+
+	text_temp := CONCAT(text_temp,';Yz2=');
+		
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_2));	
+
+	text_temp := CONCAT(text_temp,';$L');	
+
+	//Dlugosc tekstu
+	text_length := INT_TO_WORD( LEN(text_temp) );
+	
+	Trigger_Send := 1;
+	
+END_IF;
+
+IF SD10680.0 THEN
+	AUTO_SEND := TRUE;
+END_IF;
+
+// jezeli komunikacja zostala zerwana skasuj flagi wysylania
+IF LDF(TRUE, SD10680.0) THEN
+	AUTO_SEND := FALSE;
+	Trigger_Send := FALSE;
+END_IF;
+
+SP_SOCSND(AUTO_SEND AND LDP(TRUE, Trigger_Send) AND SD10680.0 , 'U0' , K1 , Control_data_SOCSND , text_length , M300 );
+
+IF M300 AND NOT M301 THEN
+	Trigger_Send := 0;
+END_IF;
+
+
+
+
+
