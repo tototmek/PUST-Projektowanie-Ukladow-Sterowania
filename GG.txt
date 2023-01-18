@@ -79,33 +79,33 @@ CASE  Stan_MAIN  OF
 		u_k := 10.0;
 		TIM_MAIN.IN := 1;
 		Stan_MAIN := 1;
-	
-	1:	
+
+	1:
 		IF TIM_MAIN.Q THEN
 			u_k := 3.0;
 			TIM_MAIN.IN := 0;
-			Stan_MAIN := 2;		
+			Stan_MAIN := 2;
 		END_IF;
-	
+
 	2:
-		Stan_MAIN := 3;	
-			
+		Stan_MAIN := 3;
+
 	3:
 		IF NOT TIM_MAIN.Q THEN
 			TIM_MAIN.IN := 1;
 			Stan_MAIN := 4;
 		END_IF;
-	
+
 	4:
 		IF TIM_MAIN.Q THEN
 			u_k := 10.0;
 			TIM_MAIN.IN := 0;
-			Stan_MAIN := 5;		
-		END_IF;		
+			Stan_MAIN := 5;
+		END_IF;
 
 	5:
-		Stan_MAIN := 0;		
-		
+		Stan_MAIN := 0;
+
 END_CASE;
 */
 
@@ -154,33 +154,33 @@ IF AUTO_SEND AND LDP(TRUE, SM412) THEN
 
 	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_1));
 
-	text_temp := CONCAT(text_temp,';Y2=');	
-	
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_2));	
-	
+	text_temp := CONCAT(text_temp,';Y2=');
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_2));
+
 	text_temp := CONCAT(text_temp,';U1=');
-	
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_1));	
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_1));
 
 	text_temp := CONCAT(text_temp,';U2=');
-		
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_2));	
-	
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_2));
+
 	text_temp := CONCAT(text_temp,';Yz1=');
-	
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_1));	
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_1));
 
 	text_temp := CONCAT(text_temp,';Yz2=');
-		
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_2));	
 
-	text_temp := CONCAT(text_temp,';$L');	
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_2));
+
+	text_temp := CONCAT(text_temp,';$L');
 
 	//Dlugosc tekstu
 	text_length := INT_TO_WORD( LEN(text_temp) );
-	
+
 	Trigger_Send := 1;
-	
+
 END_IF;
 
 IF SD10680.0 THEN
@@ -210,8 +210,8 @@ u_2 := INT_TO_REAL(D115) / 10.0;
 e_1 := yzad_1 - y_1;
 e_2 := yzad_2 - y_2;
 
-u_1 := u_1_k_1 + r0_1 * e_1 + r1_1 * e_1_k_1 + r2_1 * e_1_k_1;
-u_2 := u_2_k_1 + r0_2 * e_2 + r1_2 * e_2_k_1 + r2_2 * e_2_k_1;
+u_1 := u_1_k_1 + r0_1 * e_1 + r1_1 * e_1_k_1 + r2_1 * e_1_k_2;
+u_2 := u_2_k_1 + r0_2 * e_2 + r1_2 * e_2_k_1 + r2_2 * e_2_k_2;
 
 IF u_1 > 100.0 THEN
 	u_1 := 100.0;

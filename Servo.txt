@@ -1,88 +1,118 @@
-Regulator:
+// Pomiary
+AnalogInput := 0.05 * INT_TO_REAL(SD6300);
+Encoder_raw := SD4500;
+Tacho_raw := 0.0002 * INT_TO_REAL(SD6340);
 
-y_1 := INT_TO_REAL(D100) / 100.0;
-y_2 := INT_TO_REAL(D102) / 100.0;
-u_1 := INT_TO_REAL(D114) / 10.0;
-u_2 := INT_TO_REAL(D115) / 10.0;
 
-e_1 := yzad_1 - y_1;
-e_2 := yzad_2 - y_2;
+IF PID_mode THEN
 
-u_1 := u_1_k_1 + r0_1 * e_1 + r1_1 * e_1_k_1 + r2_1 * e_1_k_1;
-u_2 := u_2_k_1 + r0_2 * e_2 + r1_2 * e_2_k_1 + r2_2 * e_2_k_1;
+	// Wyliczenie nastaw
+	r_0_p := K_p * (1 + 0.5 * (T_p / Ti_p) + Td_p / T_p);
+	r_1_p := K_p * (0.5 * (T_p / Ti_p) - 2 * Td_p / T_p - 1);
+	r_2_p := K_p * Td_p / T_p;
 
-IF u_1 > 100.0 THEN
-	u_1 := 100.0;
+	//PID1
+	y_p := Tf * Tacho_raw + (1 - Tf) * y_p;
+	e_p := y_zad_p - y_p;
+
+	u_p := u_p_prev + r_0_p * e_p + r_1_p * e_p_prev + r_2_p * e_p_prev_prev;
+
+	IF u_p - u_p_prev > du_max_p THEN
+		u_p := u_p_prev + du_max_p;
+	END_IF;
+
+	IF u_p - u_p_prev < -du_max_p THEN
+		u_p := u_p_prev - du_max_p;
+	END_IF;
+
+	// Ograniczenia sterowania
+	IF u_p > 1.0 THEN
+		u_p := 1.0;
+	END_IF;
+	IF u_p < -1.0 THEN
+		u_p := -1.0;
+	END_IF;
+
+	u_p_prev := u_p;
+	e_p_prev_prev := e_p_prev;
+	e_p_prev := e_p;
+
+	// Wystawienie sterowania
+	IF u_p > 0 THEN
+		Direction := TRUE;
+	ELSE
+		Direction := FALSE;
+	END_IF;
+	PWM_value := REAL_TO_INT(ABS(u_p) * 100.0);
+
+ELSE
+	//y_w := Encoder_raw * 180 / 32000;
+	y_w := Encoder_raw;
+
+	// Wyliczenie prawa regulacji PID
+	//PID(Reguluj, y_zad_w, y_w, parametry[0], u_w);
+
+	// Ograniczenia sterowania
+	IF u_w > 100 THEN
+		u_w := 100;
+	END_IF;
+	IF u_w < -100 THEN
+		u_w := -100;
+	END_IF;
+
+	// Wystawienie sterowania
+	IF u_w > 0 THEN
+	Direction := FALSE;
+	ELSE
+	Direction := TRUE;
+	END_IF;
+	PWM_value := abs(u_w);
 END_IF;
 
-IF u_2 > 100.0 THEN
-	u_2 := 100.0;
+
+//Ograniczenia sterowania
+Enable := TRUE;
+IF PWM_value > 100 THEN
+	PWM_value := 100;
+END_IF;
+IF PWM_value < 2 THEN
+	PWM_value := 1;
+	Enable := FALSE;
 END_IF;
 
-IF u_1 < 0.0 THEN
-	u_1 := 0.0;
-END_IF;
-
-IF u_2 < 0.0 THEN
-	u_2 := 0.0;
-END_IF;
-
-u_1_k_1 := u_1;
-u_2_k_1 := u_2;
-e_1_k_2 := e_1_k_1;
-e_1_k_1 := e_1;
-e_2_k_2 := e_2_k_1;
-e_2_k_1 := e_2;
+// Wystawienie sterowania
+PWM(TRUE, PWM_value, K100, Y0);
 
 
-IF y_1 > 250.0 OR y_2 > 250.0 THEN
-	u_1 := 0.0;
-	u_2 := 0.0;
-END_IF;
+s_counter := s_counter + 1;
 
-D114 := REAL_TO_INT(u_1 * 10.0);
-D115 := REAL_TO_INT(u_2 * 10.0);
-
-
-
-
-
-
-// Automat stanowy
-count := count + 1;
-IF count > 64 THEN
-	count := 0;
+IF s_counter > 2500 THEN
+	s_counter := 0;
 	IF state = 3 THEN
-		state := 4;
-		yzad_1 := 35.0;
-		yzad_2 := 35.0;
+		state :=4;
+		y_zad_p := -0.5;
 	END_IF;
 	IF state = 2 THEN
 		state := 3;
-		yzad_1 := 35.0;
-		yzad_2 := 45.0;
+		y_zad_p := 0;;
 	END_IF;
 	IF state = 1 THEN
 		state := 2;
-		yzad_1 := 45.0;
-		yzad_2 := 45.0;
+		y_zad_p := 1.0;;
 	END_IF;
 	IF state = 0 THEN
 		state := 1;
-		yzad_1 := 45.0;
-		yzad_2 := 35.0;
+		y_zad_p := 0.5;
 	END_IF;
 	IF state = 4 THEN
 		state := 0;
 	END_IF;
 END_IF;
 
-SocketComm
-
 
 // Sprawdzenie otwartego polaczenia
 SP_SOCCINF( SD10680.0 , 'U0' , K1 , Control_data_SOCCINF , Conn_info_SOCCINF );
-
+PID(Reguluj, y_zad_w, y_w, parametry[0], u_w);
 
 OUT(SD10680.0 AND SM412, Y17);
 
@@ -91,37 +121,40 @@ IF AUTO_SEND AND LDP(TRUE, SM412) THEN
 
 //Generacja tesktu do wyslania przez socket communication
 
-	text_temp := 'Y1=';
+	text_temp := 'y_p=';
 
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_1));
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_p));
 
-	text_temp := CONCAT(text_temp,';Y2=');	
-	
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_2));	
-	
-	text_temp := CONCAT(text_temp,';U1=');
-	
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_1));	
+	text_temp := CONCAT(text_temp,';u_p=');
 
-	text_temp := CONCAT(text_temp,';U2=');
-		
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_2));	
-	
-	text_temp := CONCAT(text_temp,';Yz1=');
-	
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_1));	
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_p));
 
-	text_temp := CONCAT(text_temp,';Yz2=');
-		
-	text_temp := CONCAT(text_temp,REAL_TO_STRING(yzad_2));	
+	text_temp := CONCAT(text_temp,';y_zad_p=');
 
-	text_temp := CONCAT(text_temp,';$L');	
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_zad_p));
+
+
+	text_temp := CONCAT(text_temp,';y_w=');
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_w));
+
+
+	text_temp := CONCAT(text_temp,';y_zad_w=');
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(y_zad_w));
+
+
+	text_temp := CONCAT(text_temp,';u_w=');
+
+	text_temp := CONCAT(text_temp,REAL_TO_STRING(u_w));
+
+	text_temp := CONCAT(text_temp,';$L');
 
 	//Dlugosc tekstu
 	text_length := INT_TO_WORD( LEN(text_temp) );
-	
+
 	Trigger_Send := 1;
-	
+
 END_IF;
 
 IF SD10680.0 THEN
@@ -144,3 +177,54 @@ END_IF;
 
 
 
+##############DUPA
+okres_probkowania := 0.1;
+stala_czasowa := 10.0;
+K_p_proces := 25.0;
+u_k := 1.5; //wstepna wartosc sterowania
+
+//Inicjalizacja MODBUS
+Pomiar_MODBUS := 0;
+Zapis_MODBUS := 0;
+
+MOV(TRUE, K11, Slave_adres);
+MOV(TRUE, K4, Function_code); //4-pomiar, 3-sterowanie
+MOV(TRUE, K0, Modbus_adres); //zaczynamy liczyc od 0
+MOV(TRUE, K7, Device_count); //7 pomiarow, 6 sterowan
+
+//Ustawienie poczatkowe wyjsc procesu
+ZRST(TRUE, D110, D120);
+
+SD414 := 2; //timer 2n, ktorego odliczenie odczytujemy z SM414 // ustawiony
+
+HIOEN(TRUE, K0, K1, K0);
+
+Direction := 0;
+Enable := 0;
+PWM_value := 1;
+PID_mode := FALSE;
+
+K_p := 4.0;
+Ti_p := 100.0;
+Td_p := 0.0;
+T_p := 0.02;
+
+du_max_p := 0.3;
+
+Tf := 0.1;
+
+u_p_prev := 0.0;
+e_p_prev := 0.0;
+e_p_prev_prev := 0.0;
+y_zad_p := 0;
+
+// PID 2
+
+parametry[0] := K20; //okres regulacji w milisekundach
+parametry[3] := K1; //wzmocnienie regulatora P
+parametry[4] := K0; //TI = 0 oznacza nieskonczony czas calkowania - inaczej mowiac
+parametry[5] := K0; //KD = 0 oznacza zerowe wzmocnienie rozniczkowania
+parametry[6] := K0; //TD = 0 oznacza wylaczone rozniczkowani
+parametry[22] := 200; //gorny limit wartosci wyjsciowej z regulatora - zapobiega
+parametry[23] := 0; //dolny limit wartosci wyjsciowej z regulatora - -||-
+SET(FALSE, parametry[1].5); //aktywacja limitow na wyjsciu regulator
